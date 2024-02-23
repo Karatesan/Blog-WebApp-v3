@@ -1,0 +1,10 @@
+#ten compose controluje i sam uruchamia obraz postgresa, nie musze robic tego w konsoli
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=blog'
+      - 'POSTGRES_PASSWORD=password'
+      - 'POSTGRES_USER=user'
+    ports:
+      - '5432:5432' #contaienr:local port

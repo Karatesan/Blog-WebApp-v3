@@ -1,0 +1,15 @@
+#Sets endpoints urlto start with this, for example: http://localhost:8080/api/blogpost
+#we dont have to put /api in every controller
+server:
+  servlet:
+    context-path: /api
+
+#tak laczymy nasz database z obrazem, jak mamy dependency spring docker compose to to sie dzieje automatycznie
+#jak w projekcie jdbc-blog
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/blogdb
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+
