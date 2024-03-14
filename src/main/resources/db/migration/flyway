@@ -1,1 +1,29 @@
 wszytskie pliki tutaj sa odpalane na podpietej bazie danych
+
+CREATE TABLE your_table (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    other_column1 data_type1,
+    other_column2 data_type2
+    -- Additional columns as needed
+);
+
+CREATE TABLE IF NOT EXISTS authorities (
+    username citext NOT NULL,
+    authority citext NOT NULL,
+    CONSTRAINT fk_authorities_users FOREIGN KEY (username) REFERENCES users(username)
+);
+
+CONSTRAINT fk_authorities_users: This is the name assigned to the foreign key constraint.
+The fk_authorities_users is an identifier for this specific constraint, and it is optional.
+Naming constraints can be useful for clarity and ease of management, especially in more complex database schemas.
+
+FOREIGN KEY (username): This part specifies that the column username in the current table is a foreign key.
+It means that the values in this column will reference values in another table.
+
+REFERENCES users(username): This part indicates the table and column to which the foreign key refers.
+In this case, the username column in the current table (authorities) references the username column in the users table.
+This establishes a relationship between the two tables.
+
+@Id is used to mark the id field as the primary key.
+@GeneratedValue is used to specify the strategy for generating the primary key values,
+and GenerationType.IDENTITY indicates that the database should handle the generation (which aligns with IDENTITY columns in databases like PostgreSQL).
