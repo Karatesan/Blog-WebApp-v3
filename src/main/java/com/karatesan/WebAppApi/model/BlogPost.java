@@ -27,7 +27,7 @@
 //    //private BlogUser author;
 //    //private List<Comment> comments;
 //    private int rating;
-//    //toDo
+//
 ////    private String poster;
 ////    private List<String>images;
 //}

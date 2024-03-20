@@ -5,14 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.Collection;
-import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
+@Table(name = "blog_users")
 public class BlogUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
