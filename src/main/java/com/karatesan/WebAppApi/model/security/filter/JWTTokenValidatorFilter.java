@@ -42,16 +42,19 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                         null,
                         AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
                 SecurityContextHolder.getContext().setAuthentication(auth);
-
             } catch (Exception e) {
                 throw new BadCredentialsException("Invalid Token");
             }
+        }
+        else{
+            filterChain.doFilter(request,response);
+            return;
         }
         filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getServletPath().equals("/user");
+        return request.getServletPath().equals("/login");
     }
 }

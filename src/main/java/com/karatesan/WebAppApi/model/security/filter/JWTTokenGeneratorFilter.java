@@ -44,7 +44,7 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         //to definiujemy, zeby filter byr robieny tylko podczas logowania, pozniej juz nie musimy go generowac, /user to sciezka jaka fron daje podczas logina
-        return !request.getServletPath().equals("/user");
+        return !request.getServletPath().equals("/login");
     }
 
     private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {

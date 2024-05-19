@@ -15,3 +15,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          web:
+            filterChainProxy: DEBUG
+security:
+  jwt:
+    secret-key: jxgEQeXHuPq8VdbyYFNkANdudQ54YUn4
+    expiration-time: 360000000
