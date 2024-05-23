@@ -3,10 +3,9 @@ package com.karatesan.WebAppApi.model.security.jwt;
 import com.karatesan.WebAppApi.model.security.BlogUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import io.jsonwebtoken.Jwts;
+
 @Component
 public class JwtUtils {
 
