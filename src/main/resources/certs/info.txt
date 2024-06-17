@@ -1,0 +1,2 @@
+do generowania pary kluczy uzywam openssl i komendy
+    openssl genrsa -out keypair.pem 2048

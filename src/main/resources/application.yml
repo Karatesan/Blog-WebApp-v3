@@ -7,6 +7,8 @@ server:
 #tak laczymy nasz database z obrazem, jak mamy dependency spring docker compose to to sie dzieje automatycznie
 #jak w projekcie jdbc-blog
 spring:
+  application:
+    name: karatesan
   datasource:
     url: jdbc:postgresql://localhost:5432/blogdb
     username: user
@@ -15,14 +17,68 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-logging:
-  level:
-    org:
-      springframework:
-        security:
-          web:
-            filterChainProxy: DEBUG
-security:
-  jwt:
-    secret-key: jxgEQeXHuPq8VdbyYFNkANdudQ54YUn4
-    expiration-time: 360000000
+  data:
+    redis:
+#     to jest nazwa kontenera, jaka nadajemy podczas tworzenia kontenera (np. w docker-compose)
+      host:redis-cache
+      port:6379  # The internal Redis port, not the mapped port
+      #password:Password@123
+
+com:
+  karatesan:
+    web-app-api:
+      token:
+        access-token:
+          private-key: |
+            -----BEGIN PRIVATE KEY-----
+            MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDzHCc23b/WXxc1
+            Dp2uaJxNoR0IMv2hDIepG2WKEi53BrMwDMBHFiTiyEoHq6UpA+hK63pLxo9lhTOS
+            BJydSN4Qbpbm02JF3Uy24EmYZbCW7Qe7cyA+2GwC56+BuU+Ns0APh11vKTMP1/l0
+            ZOHtFxznTETLv48N0pOy/vXdS9LBm0zbLLmlzzSgJs+dZtLaAnbRqxWOn//pHCa0
+            VDJj+uj/RgedOTkGrO3QEWW83xwDSCLPYiB44JvGzidHhRDLUF23pxhmAf/VfI8a
+            oTf7efyZ0zG7BcMzpHsIcS0whgUDw2szYpIqbIO2ufgbalUqZ17wXsg1LPZKQ+z3
+            Jhhh7XgvAgMBAAECggEAJ+O6sM9PJtw7cUKQr4liptTaGqT4kMWpjMnTWLBbB2oG
+            BMr9fFcvKOGMTsM55QegbzVBanrjadj3+UGLIROlEYp+dX7BuozxMCCPyChcrVGp
+            2cwDbSG9t0xPXo21dp6u0t13K0IrVVzZWuEitkWl7HMgkVNBJGzPkf3brGVAk5uX
+            RGP4gV9TnPSYeV4Ls4EbIMyWvlVVrHQ2HZ6bqC5djk4l8uilpySNr++1Kv+Mmh79
+            Co0XP1xNJBJbSaNgVYu0Nyx9VhNoQSJ6QNzXkE4fPq6iIsFysVbz7Mo/MgRmxBRM
+            Cobl8J6JG+NduSqHiu4HZu56HjgVUmT9scrWCwKpoQKBgQD9En+oT1aQzWSXRn9u
+            7iHSHvBO6KFtIBV3zTFZmeEu2IEvGZnRZ9cCf6xOS3oN56BoeKhZbDRzLNlGOX/0
+            TWFXOOhRqyBI67hFblW6Nk/XQmOnltOolQy8OVm7iU2mteBdMl+CGZ0W3gPHIFYJ
+            mhQe4q7PiqqDTx0Qa0Q9/bEv7QKBgQD17CZtnKASZ/EJkYDWgVTyfANRSrPJ8TLO
+            mfQv80kLha9Rjaek84C0InZtny533VrulNNyIO9H/EYXNPezb3VZBP9b+9cOoqmz
+            1ZTGDSW2cn+tR0/4dk36dV5TDCtuQlLItQvwfmeGHngxQPgnoPPPSF2TXEbA0TJ6
+            HISxp3rtCwKBgBzhWo4jl7Zoqh0VX3+ST2vCOhxXMezZJ3oHgaU/CVKmRH/ShRo/
+            pmrTlR9OP7yMfWLOui+SSJ4INTdtYmvH1N72UJTZWZLYy6uovsHEZvIi0mqSrM7l
+            S5HDXbkoHyNySAt6rymSsLmmVnoH96ma2sb3iYmHwpO/mIqCI0SLyge1AoGBAOqg
+            rx0/JN3Ku4a0gualKCXdudCSZCxUanQBIJ+rDtLmbhlx/DN9exriEnmOOOh1ka80
+            4PPvhjv47epwR6+ztJMFGJlrEojNGvoP2UyH+KY0Yaox8pOMU+OUnTTA1KLytkb1
+            rPl7sEuewG/Fm707a8IlOdpBXOPT88Pbd6KDtt13AoGBAIjQKRkYF3WQ4m4ZME2q
+            8CJHXx4gzrDc+57ycOydt+9+z5z7mHUo4sZ7lg/LL8kjuld+98L7+DTFb8FnnnIc
+            upCel2c7jQHWTrSdTFStEBPAQs2JqipxZy/IO5VJfD/RtduuKpCu5lP2gCgFssUt
+            UtxNg3jxjS+CD0Bf771U55uq
+            -----END PRIVATE KEY-----
+          public-key: |
+            -----BEGIN PUBLIC KEY-----
+            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA8xwnNt2/1l8XNQ6drmic
+            TaEdCDL9oQyHqRtlihIudwazMAzARxYk4shKB6ulKQPoSut6S8aPZYUzkgScnUje
+            EG6W5tNiRd1MtuBJmGWwlu0Hu3MgPthsAuevgblPjbNAD4ddbykzD9f5dGTh7Rcc
+            50xEy7+PDdKTsv713UvSwZtM2yy5pc80oCbPnWbS2gJ20asVjp//6RwmtFQyY/ro
+            /0YHnTk5Bqzt0BFlvN8cA0giz2IgeOCbxs4nR4UQy1Bdt6cYZgH/1XyPGqE3+3n8
+            mdMxuwXDM6R7CHEtMIYFA8NrM2KSKmyDtrn4G2pVKmde8F7INSz2SkPs9yYYYe14
+            LwIDAQAB
+            -----END PUBLIC KEY-----
+          validity: 30
+        refresh-token:
+          validity: 120
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security:
+#          web:
+#            filterChainProxy: DEBUG
+#security:
+#  jwt:
+#    secret-key: jxgEQeXHuPq8VdbyYFNkANdudQ54YUn4
+#    expiration-time: 360000000

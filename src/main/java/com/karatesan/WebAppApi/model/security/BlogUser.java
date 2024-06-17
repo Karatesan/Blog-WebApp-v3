@@ -2,9 +2,9 @@ package com.karatesan.WebAppApi.model.security;
 
 import com.karatesan.WebAppApi.model.security.role.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 
@@ -21,6 +21,9 @@ public class BlogUser {
     private String lastName;
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private UserStatus userStatus;
     //author,reader,admin?
     @ManyToMany
     @JoinTable(
@@ -30,5 +33,6 @@ public class BlogUser {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
+    private LocalDateTime createdAt;
 
 }
