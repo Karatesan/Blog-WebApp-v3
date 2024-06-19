@@ -97,7 +97,7 @@ public class UserService {
                 .orElseThrow(IllegalStateException::new);
         user.setUserStatus(UserStatus.DEACTIVATED);
         userRepository.save(user);
-        tokenRevocationService.revoke();
+        tokenRevocationService.revokeAccessToken();
     }
 
 }

@@ -10,6 +10,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+
+//entry point obsluguje wyjatki podczas uwierzytelniania w filterChain, czyli jak nie mamy odpwoiednich role/privilege zeby moc gorzystac z danego endpointa np.
 @Configuration
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {

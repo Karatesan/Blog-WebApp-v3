@@ -41,6 +41,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET,apiEndpointSecurityInspector.getPublicGetEndpoints().toArray(String[]::new)).permitAll()
                             .requestMatchers(HttpMethod.POST,apiEndpointSecurityInspector.getPublicPostEndpoints().toArray(String[]::new)).permitAll()
                             .requestMatchers(HttpMethod.PUT,apiEndpointSecurityInspector.getPublicPutEndpoints().toArray(String[]::new)).permitAll()
+                            .requestMatchers("/blogpost").hasRole("USERSss")
                             .anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

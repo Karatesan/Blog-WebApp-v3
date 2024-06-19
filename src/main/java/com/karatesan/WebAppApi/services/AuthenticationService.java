@@ -32,6 +32,7 @@ public class AuthenticationService {
     private final RefreshTokenGenerator refreshTokenGenerator;
     private final CompromisedPasswordChecker compromisedPasswordChecker;
     private final TokenConfigurationProperties tokenConfigurationProperties;
+    private final TokenRevocationService tokenRevocationService;
 
 
     public TokenSuccessResponseDto login(@NonNull final UserLoginRequestDto userLoginRequestDto){
@@ -59,6 +60,11 @@ public class AuthenticationService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public void logout(){
+        tokenRevocationService.revokeAccessToken();
+        tokenRevocationService.revokeRefreshToken();
     }
 
     public TokenSuccessResponseDto refreshToken(@NonNull final String refreshToken){

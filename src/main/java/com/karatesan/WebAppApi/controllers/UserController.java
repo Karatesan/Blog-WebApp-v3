@@ -25,7 +25,6 @@ public class UserController {
     @PublicEndpoint
     @PostMapping
     public ResponseEntity<HttpStatus> createUser(@Valid @RequestBody final UserCreationRequestDto userCreationRequest){
-        System.out.println("W users");
         userService.create((userCreationRequest));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

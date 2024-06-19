@@ -29,6 +29,10 @@ public class CacheManager {
         log.info("Cached non value key '{}' for {} seconds", key, timeToLive.toSeconds());
     }
 
+    public void delete(@NonNull final String key){
+        redisTemplate.delete(key);
+    }
+
     public Boolean isPresent(@NonNull final String key) {
         final var fetchedValue = redisTemplate.opsForValue().get(key);
         return Optional.ofNullable(fetchedValue).isPresent();

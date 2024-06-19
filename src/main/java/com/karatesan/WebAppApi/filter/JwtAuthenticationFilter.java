@@ -32,7 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @SneakyThrows
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
     {
-        System.out.println("W filterze");
         boolean unsecureRequestBeingInvoked = apiEndpointSecurityInspector.isUnsecureRequest(request);
 
         if(!unsecureRequestBeingInvoked){

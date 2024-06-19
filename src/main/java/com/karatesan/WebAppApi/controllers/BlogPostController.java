@@ -10,7 +10,6 @@ import java.security.Principal;
 @RestController
 public class BlogPostController {
 
-    @PublicEndpoint
     @GetMapping("/blogpost")
     public String getBlogPost(Principal principal) {
         System.out.println("dasdasdas");

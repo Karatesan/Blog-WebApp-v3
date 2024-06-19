@@ -8,6 +8,7 @@ import com.karatesan.WebAppApi.services.AuthenticationService;
 import com.karatesan.WebAppApi.utility.RefreshTokenHeaderProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +23,6 @@ public class AuthenticationController {
     @PublicEndpoint
     @PostMapping(value = "/login")
     public ResponseEntity<TokenSuccessResponseDto>login(@Valid @RequestBody final UserLoginRequestDto loginRequest){
-        System.out.println(
-                "W kontolerze"
-        );
-
         TokenSuccessResponseDto response = authenticationService.login(loginRequest);
         return ResponseEntity.ok(response);
     }
@@ -36,6 +33,12 @@ public class AuthenticationController {
         String refreshToken = refreshTokenHeaderProvider.getRefreshToken().orElseThrow(TokenVerificationException::new);
         TokenSuccessResponseDto tokenResponse = authenticationService.refreshToken(refreshToken);
         return ResponseEntity.ok(tokenResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<HttpStatus>logout(){
+        authenticationService.logout();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
