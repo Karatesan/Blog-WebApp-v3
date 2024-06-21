@@ -23,6 +23,7 @@ public class AuthenticationController {
     @PublicEndpoint
     @PostMapping(value = "/login")
     public ResponseEntity<TokenSuccessResponseDto>login(@Valid @RequestBody final UserLoginRequestDto loginRequest){
+        System.out.println("W kontrolerze");
         TokenSuccessResponseDto response = authenticationService.login(loginRequest);
         return ResponseEntity.ok(response);
     }

@@ -1,5 +1,6 @@
 package com.karatesan.WebAppApi.services;
 
+import com.karatesan.WebAppApi.RefreshToken;
 import com.karatesan.WebAppApi.config.TokenConfigurationProperties;
 import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
 import com.karatesan.WebAppApi.dto.UserLoginRequestDto;
@@ -22,7 +23,6 @@ import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor
-@EnableConfigurationProperties(TokenConfigurationProperties.class)
 public class AuthenticationService {
 
     private final JwtUtility jwtUtility;
@@ -31,7 +31,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenGenerator refreshTokenGenerator;
     private final CompromisedPasswordChecker compromisedPasswordChecker;
-    private final TokenConfigurationProperties tokenConfigurationProperties;
     private final TokenRevocationService tokenRevocationService;
 
 
@@ -52,13 +51,13 @@ public class AuthenticationService {
             throw new CompromisedPasswordException("Password has been compromised. Password reset required.");
 
         final String accessToken = jwtUtility.generateAccessToken(user);
-        final String refreshToken = refreshTokenGenerator.generate();
-        Integer validity = tokenConfigurationProperties.getRefreshToken().getValidity();
-        cacheManager.save(refreshToken,user.getId(), Duration.ofMinutes(validity));
+        final RefreshToken refreshToken = refreshTokenGenerator.createToken();
+
+        cacheManager.save(refreshToken,user.getId());
 
         return TokenSuccessResponseDto.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .refreshToken(refreshToken.token())
                 .build();
     }
 

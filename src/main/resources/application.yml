@@ -68,9 +68,9 @@ com:
             mdMxuwXDM6R7CHEtMIYFA8NrM2KSKmyDtrn4G2pVKmde8F7INSz2SkPs9yYYYe14
             LwIDAQAB
             -----END PUBLIC KEY-----
-          validity: 30
+          validity: 30 #in minutes
         refresh-token:
-          validity: 120
+          validity: 43200
 #logging:
 #  level:
 #    org:
