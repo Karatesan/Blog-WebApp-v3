@@ -14,8 +14,10 @@ public class UserCreationRequestDto {
     @NotBlank(message = "last-name must not be empty")
     private String lastName;
     @NotBlank(message = "email-id must not be empty")
-    @Email(message = "email-id must be of valid format")
+    @Email(message = "email must be of valid format")
     private String email;
     @NotBlank(message = "password must not be empty")
     private String password;
+    @NotBlank(message = "confirm password must not be empty")
+    private String confirmPassword;
 }

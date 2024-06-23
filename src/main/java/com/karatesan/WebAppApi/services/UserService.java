@@ -6,6 +6,7 @@ import com.karatesan.WebAppApi.dto.UserCreationRequestDto;
 import com.karatesan.WebAppApi.dto.UserDetailDto;
 import com.karatesan.WebAppApi.exception.AccountAlreadyExistsException;
 import com.karatesan.WebAppApi.exception.InvalidCredentialsException;
+import com.karatesan.WebAppApi.exception.PasswordMismatchException;
 import com.karatesan.WebAppApi.model.security.BlogUser;
 import com.karatesan.WebAppApi.model.security.UserStatus;
 import com.karatesan.WebAppApi.model.security.role.Role;
@@ -31,6 +32,9 @@ public class UserService {
 
     public void create(@NonNull final UserCreationRequestDto userCreationRequest) {
         final String email = userCreationRequest.getEmail();
+        if(!userCreationRequest.getPassword().equals(userCreationRequest.getConfirmPassword())){
+            throw new PasswordMismatchException("Password and confirm password do not match");
+        }
         final boolean accountWithEmailAlreadyExists = userRepository.existsByEmail(email);
         if (accountWithEmailAlreadyExists)
             throw new AccountAlreadyExistsException("Account with provided email-id already exists");

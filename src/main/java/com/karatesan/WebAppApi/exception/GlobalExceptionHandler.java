@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.password.CompromisedPasswordException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,11 +64,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(exceptionResponse);
     }
 
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<?> handlePasswordMismatchException(PasswordMismatchException ex){
+        ExceptionResponseDto<String> response = new ExceptionResponseDto<>();
+        response.setDescription(ex.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.toString());
+        return ResponseEntity.badRequest().body(response);
+    }
 
+//to jest lapane gdy @Validujemy metode i argument ma jakies anotowane pole nie spelniajace wymagan
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        final var fieldErrors = ex.getBindingResult().getFieldErrors();
-        final var description = fieldErrors.stream().map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+        List<String> description = fieldErrors.stream()
+                .map(fieldError -> fieldError.getDefaultMessage())
+                .collect(Collectors.toList());
 
         final var exceptionResponse = new ExceptionResponseDto<List<String>>();
         exceptionResponse.setStatus(HttpStatus.BAD_REQUEST.toString());
