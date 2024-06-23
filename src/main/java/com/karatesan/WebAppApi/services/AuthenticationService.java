@@ -1,7 +1,6 @@
 package com.karatesan.WebAppApi.services;
 
-import com.karatesan.WebAppApi.RefreshToken;
-import com.karatesan.WebAppApi.config.TokenConfigurationProperties;
+import com.karatesan.WebAppApi.ulilityClassess.RefreshToken;
 import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
 import com.karatesan.WebAppApi.dto.UserLoginRequestDto;
 import com.karatesan.WebAppApi.exception.InvalidCredentialsException;
@@ -13,13 +12,10 @@ import com.karatesan.WebAppApi.utility.JwtUtility;
 import com.karatesan.WebAppApi.utility.RefreshTokenGenerator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.authentication.password.CompromisedPasswordException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor

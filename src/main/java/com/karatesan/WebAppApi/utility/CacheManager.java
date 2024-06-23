@@ -2,7 +2,7 @@ package com.karatesan.WebAppApi.utility;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.karatesan.WebAppApi.RefreshToken;
+import com.karatesan.WebAppApi.ulilityClassess.RefreshToken;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,5 +1,5 @@
 
-docker run --name blogApp-postgres -e POSTGRES_PASSWORD=Joint666postgres -p 5432:5432 -d postgres:alpine            - Command to create image
+    docker run --name blogApp-postgres -e POSTGRES_PASSWORD=Joint666postgres -p 5432:5432 -d postgres:alpine            - Command to create image
 docker stop [name]or[id]                                                                                            - Stop running container
 docker start [name]                                                                                                 - uruchomianie istniejacego kontenera
 docker ps                                                                                                           - Command to show running containers

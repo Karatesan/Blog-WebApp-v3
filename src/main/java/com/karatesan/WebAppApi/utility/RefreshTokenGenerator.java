@@ -1,7 +1,7 @@
 package com.karatesan.WebAppApi.utility;
 
 
-import com.karatesan.WebAppApi.RefreshToken;
+import com.karatesan.WebAppApi.ulilityClassess.RefreshToken;
 import com.karatesan.WebAppApi.config.TokenConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
