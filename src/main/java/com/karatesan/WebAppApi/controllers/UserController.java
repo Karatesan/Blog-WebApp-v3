@@ -25,6 +25,7 @@ public class UserController {
     @PublicEndpoint
     @PostMapping
     public ResponseEntity<HttpStatus> createUser(@Valid @RequestBody final UserCreationRequestDto userCreationRequest){
+       //TODO add email confirmation of newly created account
         userService.create((userCreationRequest));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -40,6 +41,7 @@ public class UserController {
     @PublicEndpoint
     @PutMapping(value = "/reset-password")
     public ResponseEntity<HttpStatus>resetPassword(@Valid @RequestBody final ResetPasswordRequestDto details){
+        //TODO delete old tokens after resetting password
         userService.resetPassword(details);
         return  ResponseEntity.status(HttpStatus.OK).build();
     }
