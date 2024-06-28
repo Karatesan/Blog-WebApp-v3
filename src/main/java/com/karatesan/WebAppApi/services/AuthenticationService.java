@@ -9,7 +9,7 @@ import com.karatesan.WebAppApi.model.security.BlogUser;
 import com.karatesan.WebAppApi.repositories.BlogUserRepository;
 import com.karatesan.WebAppApi.utility.CacheManager;
 import com.karatesan.WebAppApi.utility.JwtUtility;
-import com.karatesan.WebAppApi.utility.RefreshTokenGenerator;
+import com.karatesan.WebAppApi.utility.TokenGenerator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -25,7 +25,7 @@ public class AuthenticationService {
     private final CacheManager cacheManager;
     private final BlogUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RefreshTokenGenerator refreshTokenGenerator;
+    private final TokenGenerator refreshTokenGenerator;
     private final CompromisedPasswordChecker compromisedPasswordChecker;
     private final TokenRevocationService tokenRevocationService;
 
@@ -47,7 +47,7 @@ public class AuthenticationService {
             throw new CompromisedPasswordException("Password has been compromised. Password reset required.");
 
         final String accessToken = jwtUtility.generateAccessToken(user);
-        final token refreshToken = refreshTokenGenerator.createToken();
+        final token refreshToken = refreshTokenGenerator.createRefreshToken();
 
         cacheManager.save(refreshToken,user.getId());
 

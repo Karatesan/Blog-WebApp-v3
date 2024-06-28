@@ -15,15 +15,21 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 @EnableConfigurationProperties(TokenConfigurationProperties.class)
-public class RefreshTokenGenerator {
+public class TokenGenerator {
 
     private static final String ALGORITHM = "SHA256";
     private final TokenConfigurationProperties tokenConfigurationProperties;
 
 
-    public token createToken(){
+    public token createRefreshToken(){
         final String token = generate();
         Integer validity = tokenConfigurationProperties.getRefreshToken().getValidity();
+        return new token(token,validity);
+    }
+
+    public token createVerificationToken(){
+        final String token = generate();
+        Integer validity = tokenConfigurationProperties.getVerificationToken().getValidity();
         return new token(token,validity);
     }
 

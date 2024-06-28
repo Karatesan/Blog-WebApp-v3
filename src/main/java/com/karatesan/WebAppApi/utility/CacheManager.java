@@ -18,11 +18,11 @@ public class CacheManager {
     private final RedisTemplate<String,Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public void save(@NonNull final token refreshToken, @NonNull final Object value){
-        Duration expirationTime = Duration.ofMinutes(refreshToken.validityDuration());
+    public void save(@NonNull final token token, @NonNull final Object value){
+        Duration expirationTime = Duration.ofMinutes(token.validityDuration());
 
-        redisTemplate.opsForValue().set(refreshToken.token(),value,expirationTime);
-        log.info("Cached value with key '{}' for {} seconds", refreshToken.token(), expirationTime);
+        redisTemplate.opsForValue().set(token.token(),value,expirationTime);
+        log.info("Cached value with key '{}' for {} seconds", token.token(), expirationTime);
     }
 
     public void save(@NonNull final String key, @NonNull final Duration timeToLive) {

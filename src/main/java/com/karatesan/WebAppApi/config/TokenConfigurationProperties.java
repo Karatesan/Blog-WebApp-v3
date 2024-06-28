@@ -30,7 +30,7 @@ public class TokenConfigurationProperties {
     private RefreshToken refreshToken = new RefreshToken();
 
     @Valid
-    private TokenConfigurationProperties.VerificationToken validationToken = new VerificationToken();
+    private VerificationToken verificationToken = new VerificationToken();
 
 
     @Getter
