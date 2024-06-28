@@ -1,6 +1,7 @@
 package com.karatesan.WebAppApi.services;
 
 
+import com.karatesan.WebAppApi.config.TokenConfigurationProperties;
 import com.karatesan.WebAppApi.dto.ResetPasswordRequestDto;
 import com.karatesan.WebAppApi.dto.UserCreationRequestDto;
 import com.karatesan.WebAppApi.dto.UserDetailDto;
@@ -11,6 +12,9 @@ import com.karatesan.WebAppApi.model.security.BlogUser;
 import com.karatesan.WebAppApi.model.security.UserStatus;
 import com.karatesan.WebAppApi.model.security.role.Role;
 import com.karatesan.WebAppApi.repositories.BlogUserRepository;
+import com.karatesan.WebAppApi.ulilityClassess.token;
+import com.karatesan.WebAppApi.utility.CacheManager;
+import com.karatesan.WebAppApi.utility.VerificationTokenGenerator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -19,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +34,8 @@ public class UserService {
     private final TokenRevocationService tokenRevocationService;
     private final CompromisedPasswordChecker compromisedPasswordChecker;
     private final RoleService roleService;
+    private final CacheManager cacheManager;
+    private final VerificationTokenGenerator verificationTokenGenerator;
 
     public void create(@NonNull final UserCreationRequestDto userCreationRequest) {
         final String email = userCreationRequest.getEmail();
@@ -55,7 +62,9 @@ public class UserService {
         user.setRoles(List.of(role));
         user.setCreatedAt(LocalDateTime.now());//ZoneOffset.UTC)
 
-        userRepository.save(user);
+        token verificationToken = verificationTokenGenerator.createVerificationToken();
+        BlogUser savedUser = userRepository.save(user);
+        cacheManager.save(verificationToken, savedUser);
     }
 
     //update

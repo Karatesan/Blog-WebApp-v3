@@ -1,7 +1,6 @@
 package com.karatesan.WebAppApi.config;
 
 
-import jakarta.annotation.PostConstruct;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -30,6 +29,9 @@ public class TokenConfigurationProperties {
     @Valid
     private RefreshToken refreshToken = new RefreshToken();
 
+    @Valid
+    private TokenConfigurationProperties.VerificationToken validationToken = new VerificationToken();
+
 
     @Getter
     @Setter
@@ -51,6 +53,14 @@ public class TokenConfigurationProperties {
     @Setter
     public class RefreshToken{
 
+        @NotNull
+        @Positive
+        private Integer validity;
+    }
+
+    @Getter
+    @Setter
+    public class VerificationToken {
         @NotNull
         @Positive
         private Integer validity;

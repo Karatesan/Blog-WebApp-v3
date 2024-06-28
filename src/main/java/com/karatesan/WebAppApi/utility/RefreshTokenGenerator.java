@@ -1,7 +1,7 @@
 package com.karatesan.WebAppApi.utility;
 
 
-import com.karatesan.WebAppApi.ulilityClassess.RefreshToken;
+import com.karatesan.WebAppApi.ulilityClassess.token;
 import com.karatesan.WebAppApi.config.TokenConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -21,10 +21,10 @@ public class RefreshTokenGenerator {
     private final TokenConfigurationProperties tokenConfigurationProperties;
 
 
-    public RefreshToken createToken(){
+    public token createToken(){
         final String token = generate();
         Integer validity = tokenConfigurationProperties.getRefreshToken().getValidity();
-        return new RefreshToken(token,validity);
+        return new token(token,validity);
     }
 
     @SneakyThrows
@@ -33,7 +33,6 @@ public class RefreshTokenGenerator {
         MessageDigest messageDigest = MessageDigest.getInstance(ALGORITHM);
         final var hash = messageDigest.digest(randomIdentifier.getBytes(StandardCharsets.UTF_8));
         return convertBytesToString(hash);
-
     }
 
     private String convertBytesToString(byte[] hash) {

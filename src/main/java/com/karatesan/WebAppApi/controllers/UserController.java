@@ -46,3 +46,12 @@ public class UserController {
         return  ResponseEntity.status(HttpStatus.OK).build();
     }
 }
+
+
+/*
+* 1. Tworzymy usera, generujemy
+*
+*
+*
+*
+* */

@@ -71,6 +71,8 @@ com:
           validity: 30 #in minutes
         refresh-token:
           validity: 43200
+        verification-token:
+          validity: 1440
 #logging:
 #  level:
 #    org:

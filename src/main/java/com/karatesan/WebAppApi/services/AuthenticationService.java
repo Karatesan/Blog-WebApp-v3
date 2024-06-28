@@ -1,6 +1,6 @@
 package com.karatesan.WebAppApi.services;
 
-import com.karatesan.WebAppApi.ulilityClassess.RefreshToken;
+import com.karatesan.WebAppApi.ulilityClassess.token;
 import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
 import com.karatesan.WebAppApi.dto.UserLoginRequestDto;
 import com.karatesan.WebAppApi.exception.InvalidCredentialsException;
@@ -32,7 +32,7 @@ public class AuthenticationService {
 
     public TokenSuccessResponseDto login(@NonNull final UserLoginRequestDto userLoginRequestDto){
 
-        final BlogUser user = userRepository.findByEmail(userLoginRequestDto.getEmailId())
+        final BlogUser user = userRepository.findByEmail(userLoginRequestDto.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid login credentials provided."));
 
         final String encodedPassword = user.getPassword();
@@ -47,7 +47,7 @@ public class AuthenticationService {
             throw new CompromisedPasswordException("Password has been compromised. Password reset required.");
 
         final String accessToken = jwtUtility.generateAccessToken(user);
-        final RefreshToken refreshToken = refreshTokenGenerator.createToken();
+        final token refreshToken = refreshTokenGenerator.createToken();
 
         cacheManager.save(refreshToken,user.getId());
 

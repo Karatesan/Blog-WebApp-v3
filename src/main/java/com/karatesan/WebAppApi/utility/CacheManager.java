@@ -1,8 +1,6 @@
 package com.karatesan.WebAppApi.utility;
-
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.karatesan.WebAppApi.ulilityClassess.RefreshToken;
+import com.karatesan.WebAppApi.ulilityClassess.token;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,7 @@ public class CacheManager {
     private final RedisTemplate<String,Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public void save(@NonNull final RefreshToken refreshToken, @NonNull final Object value){
+    public void save(@NonNull final token refreshToken, @NonNull final Object value){
         Duration expirationTime = Duration.ofMinutes(refreshToken.validityDuration());
 
         redisTemplate.opsForValue().set(refreshToken.token(),value,expirationTime);
@@ -51,6 +49,4 @@ public class CacheManager {
         log.info("Fetched cached value with key '{}'", key);
         return Optional.of(result);
     }
-
-
 }

@@ -4,7 +4,7 @@ docker stop [name]or[id]                                                        
 docker start [name]                                                                                                 - uruchomianie istniejacego kontenera
 docker ps                                                                                                           - Command to show running containers
 docker exec -it [name] /bin/bash                                                                                    - wchodzimy do naszego kontenera, kontener postgresa jest na linuxie wiec jestesmy jakby w systemie linux i mozemy kozystac komend cli
-    psql -U [POSTGRES_USER] -W (-W jak mamy to potem pyta o haslo)                                                  - po exec jak jestesmy w kontenereze, to tym zaczynamy dzialac z postgresem
+    psql -U [POSTGRES_USER] -W -d [dbname](-W jak mamy to potem pyta o haslo)                                                  - po exec jak jestesmy w kontenereze, to tym zaczynamy dzialac z postgresem
         \q                                                                                                          - disconnect z psql
         \?                                                                                                          - help
         \l                                                                                                          - pokazuje wszystkie bazy danych
@@ -13,4 +13,3 @@ docker exec -it [name] /bin/bash                                                
             !!jak jestesmy podbieci do bazy danych mozemy oprocz komend rozniez uzywac sql queries!!!!
             \d [relation_name](optional)                                                                            - list database relations, z nazwa pokazuje szczegoly konkretnej relacji
             \x                                                                                                      - zmienia sposob wyswietlania danych na bardziej czytelny (w pionie)
-
