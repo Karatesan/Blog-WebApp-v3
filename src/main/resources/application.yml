@@ -24,6 +24,19 @@ spring:
       port:6379  # The internal Redis port, not the mapped port
       #password:Password@123
 
+  #mail service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: karatesan00@gmail.com
+    password: Joint666gmail
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
+
 com:
   karatesan:
     web-app-api:
