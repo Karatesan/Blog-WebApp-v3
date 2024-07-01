@@ -8,7 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebAppApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WebAppApiApplication.class, args);
+
+		SpringApplication app = new SpringApplication(WebAppApiApplication.class);
+		app.setAdditionalProfiles("local");
+		app.run(args);
+		//SpringApplication.run(WebAppApiApplication.class, args);
 	}
 
 }
