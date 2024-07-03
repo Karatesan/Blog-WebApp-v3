@@ -3,9 +3,11 @@ package com.karatesan.WebAppApi.services;
 
 import com.karatesan.WebAppApi.exception.EmailSendingException;
 import com.karatesan.WebAppApi.utility.EmaiLConstans;
+import jakarta.mail.AuthenticationFailedException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -45,10 +47,17 @@ public class EmailService {
             // Set the email's content to be the HTML template
             message.setContent(htmlTemplate, "text/html; charset=utf-8");
             mailSender.send(message);
+        } catch (MailAuthenticationException ex) {
+            //TODO add logger
+            // Log the authentication exception with a detailed message
+           // logger.error("Failed to authenticate email service", ex);
+            throw new EmailSendingException("There was a problem sending the email. Please try again later.",ex.getCause());
         } catch (MessagingException ex) {
-            throw new EmailSendingException("Failed to send message to " + email, ex.getCause());
+            // Log the messaging exception with a detailed message
+            //logger.error("Failed to send message to " + email, ex);
+            throw new EmailSendingException("There was a problem sending the email. Please try again later.",ex.getCause());
         }
-
+        }
     }
-}
+
 

@@ -59,9 +59,14 @@ public class UserService {
         user.setCreatedAt(LocalDateTime.now());//ZoneOffset.UTC)
 
         BlogUser savedUser = userRepository.save(user);
+        try {
+            accountActivationService.sendActivationRequest(savedUser);
+        }catch (EmailSendingException ex) {
+            userRepository.delete(savedUser);
+            throw ex;
+        }
+        }
 
-        accountActivationService.sendActivationRequest(savedUser);
-    }
 
     //update
     //delete?

@@ -1,5 +1,6 @@
 package com.karatesan.WebAppApi.model.security.role;
-
+//TODO
+//change role-privilage relation to one to many, privilage doesnt need to know about role
 import com.karatesan.WebAppApi.model.security.BlogUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
