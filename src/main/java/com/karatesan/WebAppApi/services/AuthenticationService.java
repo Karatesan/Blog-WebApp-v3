@@ -1,6 +1,6 @@
 package com.karatesan.WebAppApi.services;
 
-import com.karatesan.WebAppApi.ulilityClassess.token;
+import com.karatesan.WebAppApi.ulilityClassess.Token;
 import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
 import com.karatesan.WebAppApi.dto.UserLoginRequestDto;
 import com.karatesan.WebAppApi.exception.InvalidCredentialsException;
@@ -47,7 +47,7 @@ public class AuthenticationService {
             throw new CompromisedPasswordException("Password has been compromised. Password reset required.");
 
         final String accessToken = jwtUtility.generateAccessToken(user);
-        final token refreshToken = refreshTokenGenerator.createRefreshToken();
+        final Token refreshToken = refreshTokenGenerator.createRefreshToken();
 
         cacheManager.save(refreshToken,user.getId());
 

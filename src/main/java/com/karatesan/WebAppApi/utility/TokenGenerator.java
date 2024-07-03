@@ -1,7 +1,7 @@
 package com.karatesan.WebAppApi.utility;
 
 
-import com.karatesan.WebAppApi.ulilityClassess.token;
+import com.karatesan.WebAppApi.ulilityClassess.Token;
 import com.karatesan.WebAppApi.config.TokenConfigurationProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -21,16 +21,16 @@ public class TokenGenerator {
     private final TokenConfigurationProperties tokenConfigurationProperties;
 
 
-    public token createRefreshToken(){
+    public Token createRefreshToken(){
         final String token = generate();
         Integer validity = tokenConfigurationProperties.getRefreshToken().getValidity();
-        return new token(token,validity);
+        return new Token(token,validity);
     }
 
-    public token createActivationToken(){
+    public Token createActivationToken(){
         final String token = generate();
         Integer validity = tokenConfigurationProperties.getActivationToken().getValidity();
-        return new token(token,validity);
+        return new Token(token,validity);
     }
 
     @SneakyThrows

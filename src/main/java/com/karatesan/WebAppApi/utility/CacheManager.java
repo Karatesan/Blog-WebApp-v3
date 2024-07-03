@@ -1,6 +1,6 @@
 package com.karatesan.WebAppApi.utility;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.karatesan.WebAppApi.ulilityClassess.token;
+import com.karatesan.WebAppApi.ulilityClassess.Token;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ public class CacheManager {
     private final RedisTemplate<String,Object> redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public void save(@NonNull final token token, @NonNull final Object value){
+    public void save(@NonNull final Token token, @NonNull final Object value){
         Duration expirationTime = Duration.ofMinutes(token.validityDuration());
 
         redisTemplate.opsForValue().set(token.token(),value,expirationTime);

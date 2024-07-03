@@ -9,9 +9,8 @@ import com.karatesan.WebAppApi.model.security.BlogUser;
 import com.karatesan.WebAppApi.model.security.UserStatus;
 import com.karatesan.WebAppApi.model.security.role.Role;
 import com.karatesan.WebAppApi.repositories.BlogUserRepository;
-import com.karatesan.WebAppApi.ulilityClassess.token;
+import com.karatesan.WebAppApi.ulilityClassess.Token;
 import com.karatesan.WebAppApi.utility.CacheManager;
-import com.karatesan.WebAppApi.utility.TokenGenerator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -31,8 +30,8 @@ public class UserService {
     private final CompromisedPasswordChecker compromisedPasswordChecker;
     private final RoleService roleService;
     private final CacheManager cacheManager;
-    private final TokenGenerator tokenGenerator;
-    private final EmailService emailService;
+    private final AccountActivationService accountActivationService;
+
 
     public void create(@NonNull final UserCreationRequestDto userCreationRequest) {
         final String email = userCreationRequest.getEmail();
@@ -59,10 +58,9 @@ public class UserService {
         user.setRoles(List.of(role));
         user.setCreatedAt(LocalDateTime.now());//ZoneOffset.UTC)
 
-        token activationToken = tokenGenerator.createActivationToken();
         BlogUser savedUser = userRepository.save(user);
-        cacheManager.save(activationToken, savedUser.getId());
-        emailService.sendVerificationEmail(savedUser.getName(),savedUser.getEmail(),activationToken.token());
+
+        accountActivationService.sendActivationRequest(savedUser);
     }
 
     //update
