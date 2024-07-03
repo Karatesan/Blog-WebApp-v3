@@ -45,7 +45,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         response.setStatus(status.toString());
         response.setDescription(exception.getMessage());
         return ResponseEntity.status(status).body(response);
+    }
 
+    @ExceptionHandler(EmailSendingException.class)
+    public ResponseEntity<ExceptionResponseDto<String >> emailSenderExceptionHandler(final EmailSendingException exception){
+        final HttpStatus  status = HttpStatus.BAD_REQUEST;
+        final var response = new ExceptionResponseDto<String>();
+        response.setStatus(status.toString());
+        response.setDescription(exception.getMessage());
+        return ResponseEntity.status(status).body(response);
     }
 
     @ExceptionHandler(AccessDeniedException.class)

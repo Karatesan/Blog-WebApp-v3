@@ -27,9 +27,9 @@ public class TokenGenerator {
         return new token(token,validity);
     }
 
-    public token createVerificationToken(){
+    public token createActivationToken(){
         final String token = generate();
-        Integer validity = tokenConfigurationProperties.getVerificationToken().getValidity();
+        Integer validity = tokenConfigurationProperties.getActivationToken().getValidity();
         return new token(token,validity);
     }
 

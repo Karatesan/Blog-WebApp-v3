@@ -8,6 +8,7 @@ import com.karatesan.WebAppApi.dto.UserDetailDto;
 import com.karatesan.WebAppApi.services.UserService;
 import com.karatesan.WebAppApi.utility.AuthenticatedUserIdProvider;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,9 +46,15 @@ public class UserController {
         userService.resetPassword(details);
         return  ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PublicEndpoint
+    @GetMapping("/activate/{token}")
+    public ResponseEntity<HttpStatus> activateUser(@PathVariable String token){
+
+        userService.verifyAccount(token);
+        return ResponseEntity.ok().build();
+    }
 }
-
-
 /*
 * 1. Tworzymy usera, generujemy
 *

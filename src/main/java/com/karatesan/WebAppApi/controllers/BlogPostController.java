@@ -20,7 +20,7 @@ public class BlogPostController {
     @PublicEndpoint
     public String getBlogPost(Principal principal) throws MessagingException {
         System.out.println("dasdasdas");
-        emailService.sendEmailFromTemplate();
+        emailService.sendVerificationEmail("Maciej", "maciej.gomulec@gmail.com", "dasdasfd1341de1d1");
 //        Privilege privilege = new Privilege(1L, "READ");
 //        Role role = new Role(1L, "USER", Arrays.asList(privilege));
 //        BlogUser user = new BlogUser(1L, "Maciek", "G", "test@gmail.com", "password", Arrays.asList(role), null);

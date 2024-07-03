@@ -30,7 +30,7 @@ public class TokenConfigurationProperties {
     private RefreshToken refreshToken = new RefreshToken();
 
     @Valid
-    private VerificationToken verificationToken = new VerificationToken();
+    private ActivationToken activationToken = new ActivationToken();
 
 
     @Getter
@@ -60,7 +60,7 @@ public class TokenConfigurationProperties {
 
     @Getter
     @Setter
-    public class VerificationToken {
+    public class ActivationToken {
         @NotNull
         @Positive
         private Integer validity;

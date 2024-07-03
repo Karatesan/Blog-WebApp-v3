@@ -10,7 +10,6 @@ public class WebAppApiApplication {
 	public static void main(String[] args) {
 
 		SpringApplication app = new SpringApplication(WebAppApiApplication.class);
-		app.setAdditionalProfiles("local");
 		app.run(args);
 		//SpringApplication.run(WebAppApiApplication.class, args);
 	}

@@ -4,9 +4,7 @@ package com.karatesan.WebAppApi.services;
 import com.karatesan.WebAppApi.dto.ResetPasswordRequestDto;
 import com.karatesan.WebAppApi.dto.UserCreationRequestDto;
 import com.karatesan.WebAppApi.dto.UserDetailDto;
-import com.karatesan.WebAppApi.exception.AccountAlreadyExistsException;
-import com.karatesan.WebAppApi.exception.InvalidCredentialsException;
-import com.karatesan.WebAppApi.exception.PasswordMismatchException;
+import com.karatesan.WebAppApi.exception.*;
 import com.karatesan.WebAppApi.model.security.BlogUser;
 import com.karatesan.WebAppApi.model.security.UserStatus;
 import com.karatesan.WebAppApi.model.security.role.Role;
@@ -34,6 +32,7 @@ public class UserService {
     private final RoleService roleService;
     private final CacheManager cacheManager;
     private final TokenGenerator tokenGenerator;
+    private final EmailService emailService;
 
     public void create(@NonNull final UserCreationRequestDto userCreationRequest) {
         final String email = userCreationRequest.getEmail();
@@ -60,9 +59,10 @@ public class UserService {
         user.setRoles(List.of(role));
         user.setCreatedAt(LocalDateTime.now());//ZoneOffset.UTC)
 
-        token verificationToken = tokenGenerator.createVerificationToken();
+        token activationToken = tokenGenerator.createActivationToken();
         BlogUser savedUser = userRepository.save(user);
-        cacheManager.save(verificationToken, savedUser.getId());
+        cacheManager.save(activationToken, savedUser.getId());
+        emailService.sendVerificationEmail(savedUser.getName(),savedUser.getEmail(),activationToken.token());
     }
 
     //update
@@ -111,4 +111,15 @@ public class UserService {
         tokenRevocationService.revokeAccessToken();
     }
 
+    public void verifyAccount(String token) {
+        final Long userId = cacheManager.fetch(token, Long.class).orElseThrow( ActivateAccountException::new );
+        final BlogUser user = userRepository.findById(userId)
+                .orElseThrow(IllegalStateException::new);
+        if(user.getUserStatus().equals(UserStatus.APPROVED)){
+            throw new ActivateAccountException("Account is already activated.");
+        }
+        user.setUserStatus(UserStatus.APPROVED);
+        userRepository.save(user);
+        cacheManager.delete(token);
+    }
 }
