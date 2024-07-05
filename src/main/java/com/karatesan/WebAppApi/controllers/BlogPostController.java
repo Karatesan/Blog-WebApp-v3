@@ -17,7 +17,7 @@ public class BlogPostController {
     private final EmailService emailService;
 
     @GetMapping("/blogpost")
-    @PublicEndpoint
+    //@PublicEndpoint
     public String getBlogPost(Principal principal) throws MessagingException {
         System.out.println("dasdasdas");
         emailService.sendVerificationEmail("Maciej", "maciej.gomulec@gmail.com", "dasdasfd1341de1d1");

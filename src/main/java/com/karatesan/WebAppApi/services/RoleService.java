@@ -2,6 +2,7 @@ package com.karatesan.WebAppApi.services;
 
 import com.karatesan.WebAppApi.model.security.role.Privilege;
 import com.karatesan.WebAppApi.model.security.role.Role;
+import com.karatesan.WebAppApi.model.security.role.RolesAndPrivileges;
 import com.karatesan.WebAppApi.repositories.PrivilegeRepository;
 import com.karatesan.WebAppApi.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleService {
 
-    //TODO creating new role
+    //TODO creating new role, CLEANUP
 
     private final PrivilegeRepository privilegeRepository;
     private final RoleRepository roleRepository;
@@ -22,20 +23,22 @@ public class RoleService {
 
     public Role getAdminRole(){
 
-        Privilege read = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege write = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
-        Privilege delete = createPrivilegeIfNotFound("DELETE_PRIVILEGE");
-        List<Privilege> privileges = List.of(read,write,delete);
-
-        return createRoleIfNotFound("ROLE_ADMIN", privileges);
+//        Privilege read = createPrivilegeIfNotFound(RolesAndPrivileges.Privileges.READ_PRIVILEGE.toString());
+//        Privilege write = createPrivilegeIfNotFound(RolesAndPrivileges.Privileges.WRITE_PRIVILEGE.toString());
+//        Privilege admin = createPrivilegeIfNotFound(RolesAndPrivileges.Privileges.ADMIN_PRIVILEGE.toString());
+//        List<Privilege> privileges = List.of(write,read,admin);
+        return
+                createRoleIfNotFound(RolesAndPrivileges.Roles.ROLE_ADMIN.getRoleName(),
+                                     RolesAndPrivileges.Roles.ROLE_ADMIN.getPrivilegesAsPrivileges());
     }
 
     public Role getUserRole(){
 
-        Privilege read = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        List<Privilege> privileges = List.of(read);
-
-        return createRoleIfNotFound("ROLE_USER", privileges);
+//        Privilege read = createPrivilegeIfNotFound("READ_PRIVILEGE");
+//        List<Privilege> privileges = List.of(read);
+        return
+                createRoleIfNotFound(RolesAndPrivileges.Roles.ROLE_USER.getRoleName(),
+                                     RolesAndPrivileges.Roles.ROLE_USER.getPrivilegesAsPrivileges());
     }
 
 

@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -53,7 +55,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET,apiEndpointSecurityInspector.getPublicGetEndpoints().toArray(String[]::new)).permitAll()
                             .requestMatchers(HttpMethod.POST,apiEndpointSecurityInspector.getPublicPostEndpoints().toArray(String[]::new)).permitAll()
                             .requestMatchers(HttpMethod.PUT,apiEndpointSecurityInspector.getPublicPutEndpoints().toArray(String[]::new)).permitAll()
-                            .requestMatchers("/blogpost").hasRole("USERSss")
+                            .requestMatchers("/blogpost").hasAuthority("READ_PRIVILEGE")
                             .anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -79,6 +81,12 @@ public class SecurityConfig {
         final var corsConfigurationSource = new UrlBasedCorsConfigurationSource();
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return corsConfigurationSource;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy(){
+        String hierarhy = "ROLE_ADMIN > ROLE_USER";
+        return RoleHierarchyImpl.fromHierarchy(hierarhy);
     }
 
 

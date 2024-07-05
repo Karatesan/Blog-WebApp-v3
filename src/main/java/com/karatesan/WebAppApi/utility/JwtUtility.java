@@ -52,10 +52,13 @@ public class JwtUtility {
         final Date currentTimestamp = new Date(System.currentTimeMillis());
         final Date expirationTimestamp = new Date(System.currentTimeMillis() + expiration);
 
-        final String scopes = String.join(" ", user.getUserStatus().getScopes());
+        final String userStatuses = String.join(" ", user.getUserStatus().getScopes());
         final String roles = user.getRoles().stream().map(r->r.getName()).collect(Collectors.joining(" "));
-        final String privileges = user.getRoles().stream().map(r -> r.getPrivileges().stream().map(p -> p.getName()).collect(Collectors.joining())).collect(Collectors.joining());
-        final String allClaims = String.join(" ",scopes,roles,privileges);
+        final String privileges = user.getRoles().stream()
+                .map(r -> r.getPrivileges()
+                        .stream().map(p -> p.getName()).collect(Collectors.joining(" "))).collect(Collectors.joining(" "));
+
+        final String allClaims = String.join(" ",userStatuses,roles,privileges);
 
         final var claims = new HashMap<String,String>();
         claims.put(SCOPE_CLAIM_NAME,allClaims);
@@ -82,7 +85,7 @@ public class JwtUtility {
     //=======================================================================================================
 
     public List<GrantedAuthority> getAuthority(@NonNull final String token){
-        final var scopes = extractClaim(token, claims -> claims.get(SCOPE_CLAIM_NAME, String.class));
+        String scopes = extractClaim(token, claims -> claims.get(SCOPE_CLAIM_NAME, String.class));
         return Arrays.stream(scopes.split(" "))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

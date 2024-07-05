@@ -25,7 +25,7 @@ public class BlogUser {
     @Column(name = "status")
     private UserStatus userStatus;
     //author,reader,admin?
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(

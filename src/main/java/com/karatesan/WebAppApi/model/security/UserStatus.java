@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 public enum UserStatus {
+    //TODO principal.activated
 
     PENDING_APPROVAL("Pending Approval", List.of("userprofile.read", "userprofile.update", "useridentity.verify")),
     APPROVED("Approved", List.of("fullaccess")),

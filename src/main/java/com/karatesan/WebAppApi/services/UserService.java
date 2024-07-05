@@ -49,7 +49,9 @@ public class UserService {
 
         final BlogUser user = new BlogUser();
         final String encodedPassword = passwordEncoder.encode(requestPassword);
-        final Role role = roleService.getUserRole();
+        //TEST
+        final Role role = roleService.getAdminRole();
+
         user.setName(userCreationRequest.getName());
         user.setLastName(userCreationRequest.getLastName());
         user.setEmail(email);
