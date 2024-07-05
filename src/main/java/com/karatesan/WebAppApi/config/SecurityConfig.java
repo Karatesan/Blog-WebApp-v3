@@ -11,6 +11,7 @@ import org.springframework.security.authentication.password.CompromisedPasswordC
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,14 +31,11 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final ApiEndpointSecurityInspector apiEndpointSecurityInspector;
+    private final UserDetailsService userDetailsService;
 
 
-//    @Bean
-//    public AuthenticationManager noopAuthenticationManager() {
-//        return authentication -> {
-//            throw new AuthenticationServiceException("Authentication is disabled");
-//        };
-//    }
+
+
 
     @Bean
     public SecurityFilterChain configure(final HttpSecurity http) throws Exception {

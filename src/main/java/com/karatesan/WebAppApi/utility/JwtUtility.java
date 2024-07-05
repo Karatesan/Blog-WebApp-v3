@@ -52,13 +52,12 @@ public class JwtUtility {
         final Date currentTimestamp = new Date(System.currentTimeMillis());
         final Date expirationTimestamp = new Date(System.currentTimeMillis() + expiration);
 
-        final String userStatuses = String.join(" ", user.getUserStatus().getScopes());
         final String roles = user.getRoles().stream().map(r->r.getName()).collect(Collectors.joining(" "));
         final String privileges = user.getRoles().stream()
                 .map(r -> r.getPrivileges()
                         .stream().map(p -> p.getName()).collect(Collectors.joining(" "))).collect(Collectors.joining(" "));
 
-        final String allClaims = String.join(" ",userStatuses,roles,privileges);
+        final String allClaims = String.join(" ",roles,privileges);
 
         final var claims = new HashMap<String,String>();
         claims.put(SCOPE_CLAIM_NAME,allClaims);

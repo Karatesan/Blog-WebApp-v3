@@ -11,11 +11,10 @@ import java.util.List;
 public enum UserStatus {
     //TODO principal.activated
 
-    PENDING_APPROVAL("Pending Approval", List.of("userprofile.read", "userprofile.update", "useridentity.verify")),
-    APPROVED("Approved", List.of("fullaccess")),
-    DEACTIVATED("Deactivated", List.of("userprofile.read"));
+    PENDING_APPROVAL("Pending Approval"),
+    APPROVED("Approved"),
+    DEACTIVATED("Deactivated");
 
     private final String value;
-    private final List<String> scopes;
 
 }
