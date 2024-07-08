@@ -1,5 +1,6 @@
 package com.karatesan.WebAppApi.model.security;
 
+import com.karatesan.WebAppApi.model.security.role.Privilege;
 import com.karatesan.WebAppApi.model.security.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,8 +8,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
@@ -41,6 +44,13 @@ public class BlogUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        String roles_string = roles.stream()
+                .map(r->r.getName()).collect(Collectors.joining(" "));
+        String privileges_string = roles.stream()
+                .map(r -> r.getPrivileges().stream()
+                        .map(Privilege::getName).collect(Collectors.joining(" "))).collect(Collectors.joining(" "));
+        String authorities = String.join(" ",roles_string, privileges_string);
+
         return List.of();
     }
 
