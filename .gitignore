@@ -5,7 +5,7 @@ target/
 !**/src/test/**/target/
 
 .env
-.application.yml
+application.yml
 
 
 ### STS ###

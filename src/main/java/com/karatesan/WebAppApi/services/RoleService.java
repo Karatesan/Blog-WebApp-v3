@@ -2,13 +2,46 @@ package com.karatesan.WebAppApi.services;
 
 import com.karatesan.WebAppApi.model.security.role.Privilege;
 import com.karatesan.WebAppApi.model.security.role.Role;
-import com.karatesan.WebAppApi.model.security.role.RolesAndPrivileges;
 import com.karatesan.WebAppApi.repositories.PrivilegeRepository;
 import com.karatesan.WebAppApi.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+
+
+/*
+CREATE TABLE privilege (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE role (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE role_privileges (
+    role_id BIGINT NOT NULL,
+    privilege_id BIGINT NOT NULL,
+    PRIMARY KEY (role_id, privilege_id),
+    FOREIGN KEY (role_id) REFERENCES role(id),
+    FOREIGN KEY (privilege_id) REFERENCES privilege(id)
+);
+
+INSERT INTO privilege (name) VALUES ('READ'), ('WRITE'), ('DELETE');
+INSERT INTO role (name) VALUES ('USER'), ('ADMIN'), ('MODERATOR');
+
+-- Assign privileges to roles as needed
+INSERT INTO role_privileges (role_id, privilege_id)
+VALUES
+    ((SELECT id FROM role WHERE name = 'ADMIN'), (SELECT id FROM privilege WHERE name = 'READ')),
+    ((SELECT id FROM role WHERE name = 'ADMIN'), (SELECT id FROM privilege WHERE name = 'WRITE')),
+    ((SELECT id FROM role WHERE name = 'ADMIN'), (SELECT id FROM privilege WHERE name = 'DELETE')),
+    ((SELECT id FROM role WHERE name = 'USER'), (SELECT id FROM privilege WHERE name = 'READ')),
+    ((SELECT id FROM role WHERE name = 'MODERATOR'), (SELECT id FROM privilege WHERE name = 'READ')),
+    ((SELECT id FROM role WHERE name = 'MODERATOR'), (SELECT id FROM privilege WHERE name = 'WRITE'));
+
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -19,29 +52,16 @@ public class RoleService {
     private final PrivilegeRepository privilegeRepository;
     private final RoleRepository roleRepository;
 
-
-
     public Role getAdminRole(){
 
-//        Privilege read = createPrivilegeIfNotFound(RolesAndPrivileges.Privileges.READ_PRIVILEGE.toString());
-//        Privilege write = createPrivilegeIfNotFound(RolesAndPrivileges.Privileges.WRITE_PRIVILEGE.toString());
-//        Privilege admin = createPrivilegeIfNotFound(RolesAndPrivileges.Privileges.ADMIN_PRIVILEGE.toString());
-//        List<Privilege> privileges = List.of(write,read,admin);
-        return
-                createRoleIfNotFound(RolesAndPrivileges.Roles.ROLE_ADMIN.getRoleName(),
-                                     RolesAndPrivileges.Roles.ROLE_ADMIN.getPrivilegesAsPrivileges());
+        return roleRepository.findByName("ROLE_ADMIN");
     }
 
     public Role getUserRole(){
 
-//        Privilege read = createPrivilegeIfNotFound("READ_PRIVILEGE");
-//        List<Privilege> privileges = List.of(read);
-        return
-                createRoleIfNotFound(RolesAndPrivileges.Roles.ROLE_USER.getRoleName(),
-                                     RolesAndPrivileges.Roles.ROLE_USER.getPrivilegesAsPrivileges());
+        return roleRepository.findByName("ROLE_USER");
     }
-
-
+    @Deprecated
     private Privilege createPrivilegeIfNotFound(String privilegeName) {
 
         Privilege foundPrivilege = privilegeRepository.findByName(privilegeName);
@@ -50,7 +70,7 @@ public class RoleService {
         }
         return foundPrivilege;
     }
-
+@Deprecated
     private Role createRoleIfNotFound(String roleName, List<Privilege> adminPrivileges) {
 
         Role foundRole = roleRepository.findByName(roleName);
@@ -59,6 +79,7 @@ public class RoleService {
         }
         return foundRole;
     }
+
 }
 
 

@@ -1,5 +1,6 @@
 package com.karatesan.WebAppApi.config;
 import com.karatesan.WebAppApi.filter.JwtAuthenticationFilter;
+import com.karatesan.WebAppApi.model.security.CustomUserDetailsService;
 import com.karatesan.WebAppApi.utility.ApiEndpointSecurityInspector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,10 +32,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final ApiEndpointSecurityInspector apiEndpointSecurityInspector;
-    private final UserDetailsService userDetailsService;
-
-
-
+    private final CustomUserDetailsService userDetailsService;
 
 
     @Bean

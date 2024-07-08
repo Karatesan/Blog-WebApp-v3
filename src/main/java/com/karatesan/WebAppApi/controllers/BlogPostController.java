@@ -21,10 +21,6 @@ public class BlogPostController {
     public String getBlogPost(Principal principal) throws MessagingException {
         System.out.println("dasdasdas");
         emailService.sendVerificationEmail("Maciej", "maciej.gomulec@gmail.com", "dasdasfd1341de1d1");
-//        Privilege privilege = new Privilege(1L, "READ");
-//        Role role = new Role(1L, "USER", Arrays.asList(privilege));
-//        BlogUser user = new BlogUser(1L, "Maciek", "G", "test@gmail.com", "password", Arrays.asList(role), null);
-//        return new BlogPost(1L, "Tytul", "Content", LocalDateTime.now(), null, user, null, 10);
         return "DUPA ";
     }
 }

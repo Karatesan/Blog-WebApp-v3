@@ -26,7 +26,6 @@ public class UserController {
     @PublicEndpoint
     @PostMapping
     public ResponseEntity<HttpStatus> createUser(@Valid @RequestBody final UserCreationRequestDto userCreationRequest){
-       //TODO add email confirmation of newly created account
         userService.create((userCreationRequest));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
