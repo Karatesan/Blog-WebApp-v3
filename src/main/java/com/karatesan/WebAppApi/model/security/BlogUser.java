@@ -30,7 +30,6 @@ public class BlogUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private UserStatus userStatus;
-    //author,reader,admin?
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
@@ -44,13 +43,6 @@ public class BlogUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roles_string = roles.stream()
-                .map(r->r.getName()).collect(Collectors.joining(" "));
-        String privileges_string = roles.stream()
-                .map(r -> r.getPrivileges().stream()
-                        .map(Privilege::getName).collect(Collectors.joining(" "))).collect(Collectors.joining(" "));
-        String authorities = String.join(" ",roles_string, privileges_string);
-
         return List.of();
     }
 

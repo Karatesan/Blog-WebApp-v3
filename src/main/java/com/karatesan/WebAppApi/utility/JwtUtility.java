@@ -3,6 +3,8 @@ package com.karatesan.WebAppApi.utility;
 
 import com.karatesan.WebAppApi.config.TokenConfigurationProperties;
 import com.karatesan.WebAppApi.model.security.BlogUser;
+import com.karatesan.WebAppApi.model.security.role.Privilege;
+import com.karatesan.WebAppApi.model.security.role.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -52,15 +54,8 @@ public class JwtUtility {
         final Date currentTimestamp = new Date(System.currentTimeMillis());
         final Date expirationTimestamp = new Date(System.currentTimeMillis() + expiration);
 
-        final String roles = user.getRoles().stream().map(r->r.getName()).collect(Collectors.joining(" "));
-        final String privileges = user.getRoles().stream()
-                .map(r -> r.getPrivileges()
-                        .stream().map(p -> p.getName()).collect(Collectors.joining(" "))).collect(Collectors.joining(" "));
-
-        final String allClaims = String.join(" ",roles,privileges);
-
         final var claims = new HashMap<String,String>();
-        claims.put(SCOPE_CLAIM_NAME,allClaims);
+        claims.put(SCOPE_CLAIM_NAME, rolesToSpaceSeparatedString(user.getRoles()));
 
         return Jwts.builder()
                 .claims(claims)
@@ -71,6 +66,13 @@ public class JwtUtility {
                 .and()
                 .signWith(getPrivateKey(),Jwts.SIG.RS512)
                 .compact();
+    }
+
+    public String rolesToSpaceSeparatedString(Collection<Role>roles){
+
+        final String rolesString = roles.stream().map(Role::getName).collect(Collectors.joining(" "));
+        final String privileges = roles.stream().flatMap(p -> p.getPrivileges().stream()).map(Privilege::getName).collect(Collectors.joining(" "));
+        return String.join(" ",rolesString,privileges);
     }
 
     //=======================================================================================================

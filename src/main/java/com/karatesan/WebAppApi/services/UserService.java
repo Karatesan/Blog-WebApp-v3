@@ -22,6 +22,15 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
+/**
+ *  This service handles create user, reset password, activating account via email after creating it and deactivating accout
+ *
+ *
+ *
+ *
+ */
+
 public class UserService {
 
     private final BlogUserRepository userRepository;
@@ -49,8 +58,7 @@ public class UserService {
 
         final BlogUser user = new BlogUser();
         final String encodedPassword = passwordEncoder.encode(requestPassword);
-        //TEST
-        final Role role = roleService.getAdminRole();
+        final Role role = roleService.getPreactivatedUserRole();
 
         user.setName(userCreationRequest.getName());
         user.setLastName(userCreationRequest.getLastName());
@@ -108,6 +116,7 @@ public class UserService {
                 .build();
     }
 
+    //TODO how to use deactivate,
     public void deactivate(@NonNull Long userId){
         final BlogUser user = userRepository.findById(userId)
                 .orElseThrow(IllegalStateException::new);
@@ -124,6 +133,8 @@ public class UserService {
             throw new ActivateAccountException("Account is already activated.");
         }
         user.setUserStatus(UserStatus.APPROVED);
+        Role role = roleService.getUserRole();
+        user.setRoles(List.of(role));
         userRepository.save(user);
         cacheManager.delete(token);
     }

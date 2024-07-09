@@ -15,13 +15,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private  final JwtUtility jwtUtility;
+    private final JwtUtility jwtUtility;
     private final TokenRevocationService tokenRevocationService;
     private final ApiEndpointSecurityInspector apiEndpointSecurityInspector;
 
@@ -30,18 +31,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     @SneakyThrows
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-    {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         boolean unsecureRequestBeingInvoked = apiEndpointSecurityInspector.isUnsecureRequest(request);
 
-        if(!unsecureRequestBeingInvoked){
+        if (!unsecureRequestBeingInvoked) {
             final String authorization = request.getHeader(AUTHORIZATION_HEADER);
 
-            if(authorization !=null){
-                if(authorization.startsWith(BEARER_PREFIX)){
+            if (authorization != null) {
+                if (authorization.startsWith(BEARER_PREFIX)) {
                     final String token = authorization.replace(BEARER_PREFIX, "");
                     final boolean isRevoked = tokenRevocationService.isRevoked(token);
-                    if(isRevoked){
+                    if (isRevoked) {
                         throw new TokenVerificationException();
                     }
                     final long userId = jwtUtility.extractUserId(token);
@@ -53,6 +53,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }
