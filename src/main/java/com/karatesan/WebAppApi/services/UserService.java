@@ -10,6 +10,7 @@ import com.karatesan.WebAppApi.model.security.UserStatus;
 import com.karatesan.WebAppApi.model.security.role.Role;
 import com.karatesan.WebAppApi.repositories.BlogUserRepository;
 import com.karatesan.WebAppApi.ulilityClassess.Token;
+import com.karatesan.WebAppApi.utility.AuthenticatedUserIdProvider;
 import com.karatesan.WebAppApi.utility.CacheManager;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +42,7 @@ public class UserService {
     private final RoleService roleService;
     private final CacheManager cacheManager;
     private final AccountActivationService accountActivationService;
+    private final AuthenticatedUserIdProvider authenticatedUserIdProvider;
 
 
     public void create(@NonNull final UserCreationRequestDto userCreationRequest) {
@@ -69,18 +72,23 @@ public class UserService {
         user.setCreatedAt(LocalDateTime.now());//ZoneOffset.UTC)
 
         BlogUser savedUser = userRepository.save(user);
-        try {
-            accountActivationService.sendActivationRequest(savedUser);
-        }catch (EmailSendingException ex) {
-            userRepository.delete(savedUser);
-            throw ex;
-        }
+
+        sendVerificationEmail(savedUser);
         }
 
 
     //update
     //delete?
 
+    /**
+     *
+     * @param resetPasswordRequest
+     *
+     * This method checks if user with provided email exists and checks wheter provided old password matches the one stored in database.
+     * After that also checks if new password is compromised.
+     * If everything is fine atm we encode new password, update user's password in database and invalidate
+     * access and refresh tokens forcing user to relog with new credentials.
+     */
     public void resetPassword(@NonNull final ResetPasswordRequestDto resetPasswordRequest) {
         final BlogUser user = userRepository.findByEmail(resetPasswordRequest.getEmail()).orElseThrow(
                 () -> new InvalidCredentialsException("No user exists with given email/current-password combination.")
@@ -100,6 +108,7 @@ public class UserService {
         final String encodedNewPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedNewPassword);
         userRepository.save(user);
+        tokenRevocationService.invalidateTokensForUser();
     }
 
     public UserDetailDto getUserById(@NonNull Long userId) {
@@ -125,17 +134,65 @@ public class UserService {
         tokenRevocationService.revokeAccessToken();
     }
 
+    /**
+     *
+     * @param token
+     *
+     * This method sets user status to approved after successfully activating account via link sent to user's email.
+     * First it checks wheter link is still active (24h timeout) after that it also checks if users account hasn't already been activated
+     * If not users status is updated to Approved and his role to full user, gaining access to all users activities
+     */
+
     public void verifyAccount(String token) {
         final Long userId = cacheManager.fetch(token, Long.class).orElseThrow( ActivateAccountException::new );
         final BlogUser user = userRepository.findById(userId)
                 .orElseThrow(IllegalStateException::new);
-        if(user.getUserStatus().equals(UserStatus.APPROVED)){
+
+        //checkign if user is activated and throwing exception here (below, in resendActivationLink, different approach)
+        if(isUserActivated(user)){
             throw new ActivateAccountException("Account is already activated.");
         }
+
         user.setUserStatus(UserStatus.APPROVED);
         Role role = roleService.getUserRole();
         user.setRoles(List.of(role));
         userRepository.save(user);
         cacheManager.delete(token);
+    }
+
+//for logged in user
+    public void resendActivationLink() {
+        Long userId = authenticatedUserIdProvider.getUserId();
+        BlogUser user = userRepository.findById(userId).orElseThrow(IllegalStateException::new);
+        resendActivationLinkForUser(user);
+    }
+
+    //for user that is not logged in
+    public void resendActivationLink(String email) {
+        BlogUser user = userRepository.findByEmail(email).orElseThrow(IllegalStateException::new);
+        resendActivationLinkForUser(user);
+    }
+
+    public boolean isUserActivated(BlogUser user) {
+      return user.getUserStatus().equals(UserStatus.APPROVED);
+    }
+
+    public void ensureUserIsNotActivated(BlogUser user){
+        if (isUserActivated(user)) {
+            throw new ActivateAccountException("Account is already activated.");
+        }
+    }
+
+    public void sendVerificationEmail(BlogUser user){
+        try {
+            accountActivationService.sendActivationRequest(user);
+        }catch (EmailSendingException ex) {
+            userRepository.delete(user);
+            throw ex;
+        }
+    }
+    public void resendActivationLinkForUser(BlogUser user){
+        ensureUserIsNotActivated(user);
+        sendVerificationEmail(user);
     }
 }

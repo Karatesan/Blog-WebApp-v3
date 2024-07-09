@@ -34,6 +34,11 @@ public class TokenRevocationService {
         cacheManager.delete(refreshToken);
     }
 
+    public void invalidateTokensForUser(){
+        revokeAccessToken();
+        revokeRefreshToken();
+    }
+
     public boolean isRevoked(@NonNull final String authHeader){
         final String jti = jwtUtility.getJti(authHeader);
         return cacheManager.isPresent(jti);

@@ -58,8 +58,7 @@ public class AuthenticationService {
     }
 
     public void logout(){
-        tokenRevocationService.revokeAccessToken();
-        tokenRevocationService.revokeRefreshToken();
+        tokenRevocationService.invalidateTokensForUser();
     }
 
     public TokenSuccessResponseDto refreshToken(@NonNull final String refreshToken){
