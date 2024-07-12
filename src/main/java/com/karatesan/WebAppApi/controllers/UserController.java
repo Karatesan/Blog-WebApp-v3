@@ -66,10 +66,3 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 }
-/*
- * 1. Tworzymy usera, generujemy
- *
- *
- *
- *
- * */

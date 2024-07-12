@@ -64,6 +64,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
     }
 
+    @ExceptionHandler(RoleDoesNotExistException.class)
+    public ResponseEntity<ExceptionResponseDto<String >> RoleDoesNotExistExceptionHandler(final RoleDoesNotExistException exception){
+
+        final var exceptionResponse = new ExceptionResponseDto<String>();
+        final HttpStatus  status = HttpStatus.BAD_REQUEST;
+        exceptionResponse.setStatus(status.toString());
+        exceptionResponse.setDescription(exception.getMessage());
+        return ResponseEntity.status(status).body(exceptionResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> serverExceptionHandler(final Exception exception) {
         final var exceptionResponse = new ExceptionResponseDto<String>();

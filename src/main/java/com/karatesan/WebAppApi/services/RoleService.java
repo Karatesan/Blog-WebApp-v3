@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleService {
 
-    //TODO creating new role, CLEANUP
+    //TODO creating new role, universal method for getting role from repo (by name)
 
     private final PrivilegeRepository privilegeRepository;
     private final RoleRepository roleRepository;
@@ -48,7 +48,8 @@ public class RoleService {
         }
         return foundPrivilege;
     }
-@Deprecated
+
+    @Deprecated
     private Role createRoleIfNotFound(String roleName, List<Privilege> adminPrivileges) {
 
         Role foundRole = roleRepository.findByName(roleName).orElseThrow(()-> new RoleDoesNotExistException("Role with name " + roleName + " does not exist"));
