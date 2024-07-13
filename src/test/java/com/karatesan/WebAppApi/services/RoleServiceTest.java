@@ -10,7 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
@@ -83,7 +84,7 @@ public class RoleServiceTest {
     }
 
     @Test
-    public void ggetPreactivatedUserRole_shouldReturnRole_whenRoleExists(){
+    public void getPreactivatedUserRole_shouldReturnRole_whenRoleExists(){
         Role adminRole = new Role("ROLE_PREACTIVATED");
         //Arrange
         when(roleRepository.findByName("ROLE_PREACTIVATED")).thenReturn(Optional.of(adminRole));
@@ -106,6 +107,19 @@ public class RoleServiceTest {
         assertThatThrownBy(()->roleService.getPreactivatedUserRole())
                 .isInstanceOf(RoleDoesNotExistException.class)
                 .hasMessage("Role with name ROLE_PREACTIVATED does not exist");
+    }
+
+    @Test
+    public void getRole_shouldReturnRole_whenRoleWithProvidedNameExists(){
+
+        Role roleToFind = new Role("ROLE_NAME");
+
+        when(roleRepository.findByName("ROLE_NAME")).thenReturn(Optional.of(roleToFind));
+
+        Role result = roleService.getRole("ROLE_NAME");
+
+        assertThat(result).isEqualTo(roleToFind);
+        verify(roleRepository,times(1)).findByName("ROLE_NAME");
     }
 
 

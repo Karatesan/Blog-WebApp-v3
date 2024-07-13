@@ -39,25 +39,25 @@ public class RoleService {
     }
 
 
-    @Deprecated
-    private Privilege createPrivilegeIfNotFound(String privilegeName) {
-
-        Privilege foundPrivilege = privilegeRepository.findByName(privilegeName);
-        if (foundPrivilege == null) {
-            foundPrivilege = privilegeRepository.save(new Privilege(privilegeName));
-        }
-        return foundPrivilege;
-    }
-
-    @Deprecated
-    private Role createRoleIfNotFound(String roleName, List<Privilege> adminPrivileges) {
-
-        Role foundRole = roleRepository.findByName(roleName).orElseThrow(()-> new RoleDoesNotExistException("Role with name " + roleName + " does not exist"));
-        if (foundRole == null) {
-            foundRole = roleRepository.save(new Role(roleName, adminPrivileges));
-        }
-        return foundRole;
-    }
+//    @Deprecated
+//    private Privilege createPrivilegeIfNotFound(String privilegeName) {
+//
+//        Privilege foundPrivilege = privilegeRepository.findByName(privilegeName);
+//        if (foundPrivilege == null) {
+//            foundPrivilege = privilegeRepository.save(new Privilege(privilegeName));
+//        }
+//        return foundPrivilege;
+//    }
+//
+//    @Deprecated
+//    private Role createRoleIfNotFound(String roleName, List<Privilege> adminPrivileges) {
+//
+//        Role foundRole = roleRepository.findByName(roleName).orElseThrow(()-> new RoleDoesNotExistException("Role with name " + roleName + " does not exist"));
+//        if (foundRole == null) {
+//            foundRole = roleRepository.save(new Role(roleName, adminPrivileges));
+//        }
+//        return foundRole;
+//    }
 
 }
 
