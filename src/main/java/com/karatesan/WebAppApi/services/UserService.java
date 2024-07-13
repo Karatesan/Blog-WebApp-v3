@@ -9,9 +9,9 @@ import com.karatesan.WebAppApi.model.security.BlogUser;
 import com.karatesan.WebAppApi.model.security.UserStatus;
 import com.karatesan.WebAppApi.model.security.role.Role;
 import com.karatesan.WebAppApi.repositories.BlogUserRepository;
-import com.karatesan.WebAppApi.ulilityClassess.Token;
 import com.karatesan.WebAppApi.utility.AuthenticatedUserIdProvider;
 import com.karatesan.WebAppApi.utility.CacheManager;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -19,8 +19,8 @@ import org.springframework.security.authentication.password.CompromisedPasswordE
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -143,7 +143,8 @@ public class UserService {
      * If not users status is updated to Approved and his role to full user, gaining access to all users activities
      */
 
-    public void verifyAccount(String token) {
+    @Transactional
+    public void activateAccount(String token) {
         final Long userId = cacheManager.fetch(token, Long.class).orElseThrow( ActivateAccountException::new );
         final BlogUser user = userRepository.findById(userId)
                 .orElseThrow(IllegalStateException::new);
@@ -155,7 +156,8 @@ public class UserService {
 
         user.setUserStatus(UserStatus.APPROVED);
         Role role = roleService.getUserRole();
-        user.setRoles(List.of(role));
+        List<Role>roles = new ArrayList<>(List.of(role));
+        user.setRoles(roles);
         userRepository.save(user);
         cacheManager.delete(token);
     }
