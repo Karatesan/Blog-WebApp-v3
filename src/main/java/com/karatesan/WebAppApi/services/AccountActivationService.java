@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccountActivationService {
 
-    //TODO resen email
+    //TODO resend email
 
     private final TokenGenerator tokenGenerator;
     private final EmailService emailService;
