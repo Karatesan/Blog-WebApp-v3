@@ -44,24 +44,4 @@ public class UserController {
         userService.resetPassword(details);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-    @PublicEndpoint
-    @GetMapping("/activate/{token}")
-    public ResponseEntity<HttpStatus> activateUser(@PathVariable String token) {
-
-        userService.activateAccount(token);
-        return ResponseEntity.ok().build();
-    }
-
-    //for logged in users, requestParam to jest ?email=costam
-    @PublicEndpoint
-    @PostMapping("/resend-verification-link")
-    public ResponseEntity<HttpStatus> resendActivationLink(@RequestParam(required = false) String email) {
-
-        if (email == null)
-            userService.resendActivationLink();
-        else
-            userService.resendActivationLink(email);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -27,10 +27,7 @@ import java.util.List;
 
 /**
  *  This service handles create user, reset password, activating account via email after creating it and deactivating accout
- *
- *
- *
- *
+
  */
 
 public class UserService {
@@ -40,9 +37,7 @@ public class UserService {
     private final TokenRevocationService tokenRevocationService;
     private final CompromisedPasswordChecker compromisedPasswordChecker;
     private final RoleService roleService;
-    private final CacheManager cacheManager;
     private final AccountActivationService accountActivationService;
-    private final AuthenticatedUserIdProvider authenticatedUserIdProvider;
 
 
     public void create(@NonNull final UserCreationRequestDto userCreationRequest) {
@@ -72,8 +67,7 @@ public class UserService {
         user.setCreatedAt(LocalDateTime.now());//ZoneOffset.UTC)
 
         BlogUser savedUser = userRepository.save(user);
-
-        sendVerificationEmail(savedUser);
+        accountActivationService.sendVerificationEmail(savedUser);
         }
 
 
@@ -134,67 +128,5 @@ public class UserService {
         tokenRevocationService.revokeAccessToken();
     }
 
-    /**
-     *
-     * @param token
-     *
-     * This method sets user status to approved after successfully activating account via link sent to user's email.
-     * First it checks wheter link is still active (24h timeout) after that it also checks if users account hasn't already been activated
-     * If not users status is updated to Approved and his role to full user, gaining access to all users activities
-     */
 
-    @Transactional
-    public void activateAccount(String token) {
-        final Long userId = cacheManager.fetch(token, Long.class).orElseThrow( ActivateAccountException::new );
-        final BlogUser user = userRepository.findById(userId)
-                .orElseThrow(IllegalStateException::new);
-
-        //checkign if user is activated and throwing exception here (below, in resendActivationLink, different approach)
-        if(isUserActivated(user)){
-            throw new ActivateAccountException("Account is already activated.");
-        }
-
-        user.setUserStatus(UserStatus.APPROVED);
-        Role role = roleService.getUserRole();
-        List<Role>roles = new ArrayList<>(List.of(role));
-        user.setRoles(roles);
-        userRepository.save(user);
-        cacheManager.delete(token);
-    }
-
-//for logged in user
-    public void resendActivationLink() {
-        Long userId = authenticatedUserIdProvider.getUserId();
-        BlogUser user = userRepository.findById(userId).orElseThrow(IllegalStateException::new);
-        resendActivationLinkForUser(user);
-    }
-
-    //for user that is not logged in
-    public void resendActivationLink(String email) {
-        BlogUser user = userRepository.findByEmail(email).orElseThrow(IllegalStateException::new);
-        resendActivationLinkForUser(user);
-    }
-
-    public boolean isUserActivated(BlogUser user) {
-      return user.getUserStatus().equals(UserStatus.APPROVED);
-    }
-
-    public void ensureUserIsNotActivated(BlogUser user){
-        if (isUserActivated(user)) {
-            throw new ActivateAccountException("Account is already activated.");
-        }
-    }
-
-    public void sendVerificationEmail(BlogUser user){
-        try {
-            accountActivationService.sendActivationRequest(user);
-        }catch (EmailSendingException ex) {
-            userRepository.delete(user);
-            throw ex;
-        }
-    }
-    public void resendActivationLinkForUser(BlogUser user){
-        ensureUserIsNotActivated(user);
-        sendVerificationEmail(user);
-    }
 }
