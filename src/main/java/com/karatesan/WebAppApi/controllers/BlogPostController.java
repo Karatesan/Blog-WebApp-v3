@@ -18,10 +18,9 @@ public class BlogPostController {
     private final EmailService emailService;
 
     @GetMapping("/blogpost")
-    @PreAuthorize("hasAuthority('ACTIVATED_USER')")
+    @PreAuthorize("hasAuthority('READ_PRIVILEGE')")
     public String getBlogPost(Principal principal) throws MessagingException {
-        System.out.println("dasdasdas");
-        emailService.sendVerificationEmail("Maciej", "maciej.gomulec@gmail.com", "dasdasfd1341de1d1");
+
         return "DUPA ";
     }
 }

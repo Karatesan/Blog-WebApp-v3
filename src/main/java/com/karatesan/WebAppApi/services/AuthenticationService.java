@@ -1,5 +1,6 @@
 package com.karatesan.WebAppApi.services;
 
+import com.karatesan.WebAppApi.exception.UserNotFoundException;
 import com.karatesan.WebAppApi.ulilityClassess.Token;
 import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
 import com.karatesan.WebAppApi.dto.UserLoginRequestDto;
@@ -29,7 +30,7 @@ public class AuthenticationService {
     private final CompromisedPasswordChecker compromisedPasswordChecker;
     private final TokenRevocationService tokenRevocationService;
 
-
+    //TODO prevent user from multiple logins
     public TokenSuccessResponseDto login(@NonNull final UserLoginRequestDto userLoginRequestDto){
 
         final BlogUser user = userRepository.findByEmail(userLoginRequestDto.getEmail())
@@ -62,8 +63,9 @@ public class AuthenticationService {
     }
 
     public TokenSuccessResponseDto refreshToken(@NonNull final String refreshToken){
+
         final long userId = cacheManager.fetch(refreshToken, Long.class).orElseThrow(TokenVerificationException::new);
-        final BlogUser user = userRepository.getReferenceById(userId);
+        final BlogUser user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
         final String accessToken = jwtUtility.generateAccessToken(user);
 
         return TokenSuccessResponseDto.builder()

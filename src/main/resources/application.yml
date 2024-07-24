@@ -81,7 +81,7 @@ com:
             mdMxuwXDM6R7CHEtMIYFA8NrM2KSKmyDtrn4G2pVKmde8F7INSz2SkPs9yYYYe14
             LwIDAQAB
             -----END PUBLIC KEY-----
-          validity: 30 #in minutes
+          validity: 1 #in minutes 30
         refresh-token:
           validity: 43200
         activation-token:

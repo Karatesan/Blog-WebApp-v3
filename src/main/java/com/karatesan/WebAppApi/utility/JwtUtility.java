@@ -59,6 +59,7 @@ public class JwtUtility {
 
         return Jwts.builder()
                 .claims(claims)
+                .expiration(expirationTimestamp)
                 .id(jti)
                 .issuer(issuer)
                 .issuedAt(currentTimestamp)
