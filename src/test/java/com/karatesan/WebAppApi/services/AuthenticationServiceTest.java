@@ -80,7 +80,5 @@ public class AuthenticationServiceTest {
         assertThatThrownBy(()->authenticationService.refreshToken(refreshToken))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessage("400 BAD_REQUEST \"User not found\"");
-
-
     }
 }

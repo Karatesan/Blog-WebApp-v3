@@ -3,10 +3,8 @@ package com.karatesan.WebAppApi.controllers;
 import com.karatesan.WebAppApi.config.PublicEndpoint;
 import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
 import com.karatesan.WebAppApi.dto.UserLoginRequestDto;
-import com.karatesan.WebAppApi.exception.TokenVerificationException;
 import com.karatesan.WebAppApi.services.AuthenticationService;
-import com.karatesan.WebAppApi.utility.RefreshTokenHeaderProvider;
-import jakarta.servlet.http.HttpServletRequest;
+import com.karatesan.WebAppApi.utility.TokenHeaderProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-    private final RefreshTokenHeaderProvider refreshTokenHeaderProvider;
+    private final TokenHeaderProvider tokenHeaderProvider;
 
     @PublicEndpoint
     @PostMapping(value = "/login")
@@ -36,9 +34,9 @@ public class AuthenticationController {
         TokenSuccessResponseDto tokenResponse = authenticationService.refreshToken(refreshToken);
         return ResponseEntity.ok(tokenResponse);
     }
-
+    @PublicEndpoint
     @PostMapping("/logout")
-    public ResponseEntity<HttpStatus>logout(@RequestHeader(value = "X-Refresh-Token")String refreshToken){
+    public ResponseEntity<HttpStatus>logout(){
         authenticationService.logout();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

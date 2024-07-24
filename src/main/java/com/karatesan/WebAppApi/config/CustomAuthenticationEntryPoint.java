@@ -1,5 +1,6 @@
 package com.karatesan.WebAppApi.config;
 
+import com.karatesan.WebAppApi.exception.AccessDeniedException;
 import com.karatesan.WebAppApi.exception.TokenVerificationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     @SneakyThrows
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        handlerExceptionResolver.resolveException(request, response, null, new TokenVerificationException());
+        handlerExceptionResolver.resolveException(request, response, null, new AccessDeniedException());
     }
 
 }
