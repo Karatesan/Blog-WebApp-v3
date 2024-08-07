@@ -39,16 +39,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (authorization != null) {
                 if (authorization.startsWith(BEARER_PREFIX)) {
-                    final String token = authorization.replace(BEARER_PREFIX, "");
-                    final boolean isRevoked = tokenRevocationService.isRevoked(token);
-                    if (isRevoked) {
-                        throw new TokenVerificationException();
+                    final boolean isExpired = jwtUtility.isExpired(authorization);
+                    final boolean isRevoked = tokenRevocationService.isRevoked(authorization);
+                    if(!isExpired && !isRevoked) {
+                        final String token = authorization.replace(BEARER_PREFIX, "");
+                        final long userId = jwtUtility.extractUserId(token);
+                        final List<GrantedAuthority> authority = jwtUtility.getAuthority(token);
+                        final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, authority);
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
-                    final long userId = jwtUtility.extractUserId(token);
-                    final List<GrantedAuthority> authority = jwtUtility.getAuthority(token);
-                    final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, authority);
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }

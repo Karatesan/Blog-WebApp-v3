@@ -32,6 +32,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ExceptionResponseDto<String>> responseStatusExceptionHandler(final ResponseStatusException exception) {
+
         final var exceptionResponse = new ExceptionResponseDto<String>();
         exceptionResponse.setStatus(exception.getStatusCode().toString());
         exceptionResponse.setDescription(exception.getReason());

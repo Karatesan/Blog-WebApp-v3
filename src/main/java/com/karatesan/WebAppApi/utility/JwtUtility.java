@@ -2,10 +2,13 @@ package com.karatesan.WebAppApi.utility;
 
 
 import com.karatesan.WebAppApi.config.TokenConfigurationProperties;
+import com.karatesan.WebAppApi.exception.TokenVerificationException;
 import com.karatesan.WebAppApi.model.security.BlogUser;
 import com.karatesan.WebAppApi.model.security.role.Privilege;
 import com.karatesan.WebAppApi.model.security.role.Role;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ClaimsBuilder;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import jakarta.validation.constraints.NotNull;
@@ -84,6 +87,13 @@ public class JwtUtility {
         return Duration.between(currentTimestamp, expirationTimestamp);
     }
 
+    public boolean isExpired(final String token){
+        Date expirationDate = extractClaim(token, Claims::getExpiration);
+        Date currentDate = new Date();
+
+        return currentDate.toInstant().isAfter(expirationDate.toInstant());
+    }
+
     //=======================================================================================================
 
     public List<GrantedAuthority> getAuthority(@NonNull final String token){
@@ -136,15 +146,18 @@ public class JwtUtility {
     //=======================================================================================================
 
     private <T> T extractClaim(@NonNull final String token,@NonNull final Function<Claims,T> claimsResolver) {
-        
-        final var sanitizedToken = token.replace(BEARER_PREFIX,"");
-        final var claims = Jwts.parser()
-                .requireIssuer(issuer)
-                .verifyWith(getPublicKey())
-                .build()
-                .parseSignedClaims(sanitizedToken)
-                .getPayload();
-        return claimsResolver.apply(claims);
+        try {
+            final var sanitizedToken = token.replace(BEARER_PREFIX, "");
+            Claims claims = Jwts.parser()
+                    .requireIssuer(issuer)
+                    .verifyWith(getPublicKey())
+                    .build()
+                    .parseSignedClaims(sanitizedToken)
+                    .getPayload();
+            return claimsResolver.apply(claims);
+        }catch (ExpiredJwtException e) {
+            return claimsResolver.apply(e.getClaims());
+        }
     }
 
     //=======================================================================================================
