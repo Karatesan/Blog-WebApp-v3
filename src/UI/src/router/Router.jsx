@@ -5,6 +5,7 @@ import Home from '../components/home/Home'
 import Login from '../components/authentication/Login'
 import TestSuccessLogin from '../components/authentication/TestSuccessLogin'
 import BlogPosts from '../components/BlogPosts/BlogPosts'
+import ProtectedRoute from './ProtectedRoute'
 
 const Router = () => {
   return (
@@ -14,11 +15,9 @@ const Router = () => {
                 <Route index element={<Home />} />
                 <Route path='/login' element={<Login />}/>
                 <Route path='/home' element={<TestSuccessLogin/>} />  
-                <Route path='/blogposts' element={<BlogPosts/>}/>
+                <Route path='/blogposts' element={<ProtectedRoute element={BlogPosts}/>} />
             </Route>
         </Routes>
-    
-    
     </BrowserRouter>
 
   )

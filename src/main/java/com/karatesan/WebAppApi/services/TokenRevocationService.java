@@ -34,7 +34,6 @@ public class TokenRevocationService {
         cacheManager.delete(refreshToken);
     }
 
-
     public void invalidateTokensForUser(){
         revokeAccessToken();
         revokeRefreshToken();

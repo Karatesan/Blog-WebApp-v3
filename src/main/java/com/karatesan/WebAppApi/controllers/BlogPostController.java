@@ -19,7 +19,9 @@ public class BlogPostController {
 
     @GetMapping("/blogpost")
     @PreAuthorize("hasAuthority('READ_PRIVILEGE')")
-    public String getBlogPost(Principal principal) throws MessagingException {
+    public String getBlogPost(Principal principal) throws MessagingException, InterruptedException {
+
+      //  Thread.currentThread().wait(5000);
 
         return "DUPA ";
     }

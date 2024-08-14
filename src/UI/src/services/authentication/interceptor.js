@@ -26,16 +26,17 @@ apiClient.interceptors.response.use(
         return response
     },
     async error =>{
-        console.log(error)
+            console.log("SDAAdas")
         if(error.response && error.response.status === 401){
-     
             const token = localStorage.getItem(ACCESS_TOKEN_NAME);
-            if(token){
+            if(token){  
             const isAccessTokenExpired = isTokenExpired(token)
             if(isAccessTokenExpired){
+                
                 const refreshToken = localStorage.getItem(REFRESH_TOKEN_NAME)
                 if(refreshToken ){
                     try{
+                       
                         const response = await axios.put(BASE_URL + "auth/refresh",null,{
                             headers:{ 'X-Refresh-Token': refreshToken}
                         })
@@ -57,6 +58,7 @@ apiClient.interceptors.response.use(
             }
         }
         }
+        window.location.href ='/login'
         return Promise.reject(error);
     }
 )

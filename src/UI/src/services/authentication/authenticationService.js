@@ -44,6 +44,11 @@ export const isTokenExpired = (token) =>{
     return decodedToken.exp < currentTime
 }
 
+export const isUserAuthenticated = ()=>{
+    const token = localStorage.getItem(ACCESS_TOKEN_NAME) 
+    return token?true:false;
+}
+
 // export const getRefreshedAccessToken = async ( token )=>{
 //     const url = BASE_URL + AUTH_URL + "/refresh";
 
