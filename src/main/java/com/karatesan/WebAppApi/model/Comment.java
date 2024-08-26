@@ -1,33 +1,69 @@
 package com.karatesan.WebAppApi.model;
 
 import com.karatesan.WebAppApi.model.security.BlogUser;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
+@ToString(exclude = {"blogPost","commentAuthor"})
+@Entity
 @NoArgsConstructor
 public class Comment {
-    private long id;
-    private BlogUser commentAuthor;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String commentContent;
-    private int rating;
-    //0 means its comment to a post, 1 its reply to a standalone comment, if its 2 its reply to a comment that is already nested
-    //if i relpy to a cvomment that has noo parent (standalone) i create new comment of lvl 1, and its added to list of replies of this parent comments
-    //if i reply to a comment that is already children comment of something, level is set to 2
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private  long id;
+    @ManyToOne
+    @JoinColumn(name = "blog_id")
+    private  BlogPost blogPost;
+    @ManyToOne
+    private  BlogUser commentAuthor;
+    private  LocalDateTime createdAt;
+    private  LocalDateTime updatedAt;
+    private  String commentContent;
+    private  int rating;
     private int level;
-    //string containing username, logic ll be liek that:
-    //first i request all standalone comments, user can click on "show more" underneath of a comment that has someresponses to it.
-    //then we fetch again list of replies from that comment and display them as nested comments. If comment has lvl 1 its normally displayed if
-    //if its lvl 2 name of respondTo is displayed before it as such: @Username
-    //and it can be link to a user profile (after clicking it we fetch user data and display profile)
-    private String respondTo;
+    //komentarz rodzic, z lvl 0
+    @ManyToOne
+    @JoinColumn(name = "parent_comment_id")
+    private Comment parentComment;
+    //komentarz na ktory odpowiadamy, moze byc null jezeli odpowiadamy na glowny komentarz
+    @ManyToOne
+    @JoinColumn(name = "respond_to")
+    private Comment respondTo;
     //if lvl == 0 then it can have child comments
-    private List<Comment>replies;
+//    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Comment> childComments;
+
+    public Comment(BlogPost blogPost, BlogUser commentAuthor, String commentContent, Comment parentComment, Comment respondToComment) {
+        this.blogPost = blogPost;
+        this.commentAuthor = commentAuthor;
+        this.commentContent = commentContent;
+        this.parentComment = parentComment;
+        this.respondTo = respondToComment;
+        this.rating = 0;
+        this.level = calculateLevel(parentComment);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    int calculateLevel(Comment parentComment){
+        //means that we are standalone comment to a blog post
+        if(parentComment == null) return 0;
+        //means that we are response to a standalone comment
+        if(parentComment.parentComment == null) return 1;
+        //means that comment is response to a response, which indicates that it ll have @username before content showing who we are replying to
+        return 2;
+    }
 }

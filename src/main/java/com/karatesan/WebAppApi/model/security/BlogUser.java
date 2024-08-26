@@ -1,5 +1,8 @@
 package com.karatesan.WebAppApi.model.security;
 
+
+import com.karatesan.WebAppApi.model.BlogPost;
+import com.karatesan.WebAppApi.model.Comment;
 import com.karatesan.WebAppApi.model.security.role.Privilege;
 import com.karatesan.WebAppApi.model.security.role.Role;
 import jakarta.persistence.*;
@@ -14,9 +17,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Data
+@ToString(exclude = "blogPosts")
 @Entity
 @Table(name = "blog_users")
 public class BlogUser implements UserDetails {
@@ -39,6 +43,26 @@ public class BlogUser implements UserDetails {
                     name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
     private LocalDateTime createdAt;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<BlogPost>blogPosts;
+//    @OneToMany
+//    private List<Comment> comments;
+
+
+    public BlogUser(String name, String lastName, String email, String password, UserStatus userStatus) {
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.userStatus = userStatus;
+        this.blogPosts = new ArrayList<>();
+        this.roles = new ArrayList<>();
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public void addBlogPost(BlogPost post){
+        blogPosts.add(post);
+    }
 
 
     @Override

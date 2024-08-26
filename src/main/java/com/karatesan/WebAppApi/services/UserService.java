@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +67,6 @@ public class UserService {
         accountActivationService.sendVerificationEmail(savedUser);
         }
 
-
     //update
     //delete?
 
@@ -101,8 +101,8 @@ public class UserService {
         tokenRevocationService.invalidateTokensForUser();
     }
 
-    public UserDetailDto getUserById(@NonNull Long userId) {
-        final BlogUser user = userRepository.findById(userId)
+    public UserDetailDto getUserDataById(@NonNull Long userId) {
+        final BlogUser user = findUserById(userId)
                 .orElseThrow(IllegalStateException::new);
 
         return UserDetailDto.builder()
@@ -115,6 +115,14 @@ public class UserService {
                 .build();
     }
 
+    public Optional<BlogUser> findUserById(@NonNull Long id){
+        return userRepository.findById(id);
+    }
+
+    public Optional<BlogUser> findUserByEmail(@NonNull String email){
+        return userRepository.findByEmail(email);
+    }
+
     //TODO how to use deactivate,
     public void deactivate(@NonNull Long userId){
         final BlogUser user = userRepository.findById(userId)
@@ -123,6 +131,8 @@ public class UserService {
         userRepository.save(user);
         tokenRevocationService.revokeAccessToken();
     }
+
+
 
 
 }

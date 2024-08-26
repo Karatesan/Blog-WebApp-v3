@@ -33,7 +33,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<UserDetailDto> retrieveUser() {
         final Long userId = authenticatedUserIdProvider.getUserId();
-        final UserDetailDto userDetail = userService.getUserById(userId);
+        final UserDetailDto userDetail = userService.getUserDataById(userId);
         return ResponseEntity.ok(userDetail);
     }
 

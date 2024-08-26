@@ -16,7 +16,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
   data:
     redis:
 #     to jest nazwa kontenera, jaka nadajemy podczas tworzenia kontenera (np. w docker-compose)
