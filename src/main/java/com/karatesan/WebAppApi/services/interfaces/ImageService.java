@@ -1,6 +1,8 @@
 package com.karatesan.WebAppApi.services.interfaces;
 
 
+import com.karatesan.WebAppApi.dto.blogpost.ImageUploadDto;
+import com.karatesan.WebAppApi.ulilityClassess.ImageLocationData;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,7 +14,9 @@ import java.util.UUID;
 
 public interface ImageService {
 
-    public String saveImage(String uploadDirectory, MultipartFile image) throws IOException;
+    public ImageLocationData saveImage(String uploadDirectory, Long blogId, ImageUploadDto image);
+
+    public ImageLocationData saveImage(Long blogId, ImageUploadDto image) ;
 
     public byte[] getImage(String imageDirectory, String imageName) throws IOException;
 

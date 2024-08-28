@@ -1,6 +1,10 @@
 package com.karatesan.WebAppApi.services;
 
+import com.karatesan.WebAppApi.dto.blogpost.ImageUploadDto;
+import com.karatesan.WebAppApi.exception.ImageSaveException;
+import com.karatesan.WebAppApi.model.Image;
 import com.karatesan.WebAppApi.services.interfaces.ImageService;
+import com.karatesan.WebAppApi.ulilityClassess.ImageLocationData;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -14,17 +18,26 @@ import java.util.stream.Stream;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-    public String saveImage(String uploadDirectory, MultipartFile image) throws IOException {
-        String uniqueFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+    //creates local image file name by adding to the begin randomUUID and extending it wihth order number
+    public ImageLocationData saveImage(String uploadDirectory, Long blogId, ImageUploadDto image)  {
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + image.image().getOriginalFilename()+"_"+image.imageOrder();
 
-        Path uploadPath = Path.of(uploadDirectory);
+        Path uploadPath = Path.of(uploadDirectory + "/" + blogId.toString());
         Path filePath = uploadPath.resolve(uniqueFileName);
+        try {
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            Files.copy(image.image().getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        }catch (IOException e){
+            throw new ImageSaveException(e.getMessage(),e.getCause());
+        }//TODO nie ma tego wyjatku w globalnym handlerze
+        return new ImageLocationData(uploadPath.toString(),uniqueFileName);
+    }
 
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        return uniqueFileName;
+    public ImageLocationData saveImage(Long blogId, ImageUploadDto image){
+        String DIRECTORY_PATH = "/src/main/resources/static/blogposts_images";
+        return saveImage(DIRECTORY_PATH,blogId, image);
     }
 
     public byte[] getImage(String imageDirectory, String imageName) throws IOException {
@@ -67,6 +80,8 @@ public class ImageServiceImpl implements ImageService {
             return "Failed";
         }
     }
+
+
 
 
 }

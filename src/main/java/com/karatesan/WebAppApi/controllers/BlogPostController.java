@@ -33,8 +33,7 @@ public class BlogPostController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('READ_PRIVILEGE')")
-    public ResponseEntity<BlogPostClientDataDto> createBlogPost(@RequestBody @Valid BlogPostCreationRequestDto data){
-        System.out.println("dsadas");
+    public ResponseEntity<BlogPostClientDataDto> createBlogPost(@RequestPart @Valid BlogPostCreationRequestDto data){
         BlogPostClientDataDto post = blogPostService.createBlogPost(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
