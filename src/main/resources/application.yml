@@ -16,7 +16,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   data:
     redis:
 #     to jest nazwa kontenera, jaka nadajemy podczas tworzenia kontenera (np. w docker-compose)
@@ -81,7 +81,7 @@ com:
             mdMxuwXDM6R7CHEtMIYFA8NrM2KSKmyDtrn4G2pVKmde8F7INSz2SkPs9yYYYe14
             LwIDAQAB
             -----END PUBLIC KEY-----
-          validity: 1 #in minutes 30
+          validity: 30 #in minutes 30
         refresh-token:
           validity: 43200
         activation-token:

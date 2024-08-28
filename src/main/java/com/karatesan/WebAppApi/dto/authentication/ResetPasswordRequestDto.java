@@ -1,4 +1,4 @@
-package com.karatesan.WebAppApi.dto;
+package com.karatesan.WebAppApi.dto.authentication;
 
 
 import jakarta.validation.constraints.Email;

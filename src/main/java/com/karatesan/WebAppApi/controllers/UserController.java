@@ -2,9 +2,9 @@ package com.karatesan.WebAppApi.controllers;
 
 
 import com.karatesan.WebAppApi.config.PublicEndpoint;
-import com.karatesan.WebAppApi.dto.ResetPasswordRequestDto;
-import com.karatesan.WebAppApi.dto.UserCreationRequestDto;
-import com.karatesan.WebAppApi.dto.UserDetailDto;
+import com.karatesan.WebAppApi.dto.authentication.ResetPasswordRequestDto;
+import com.karatesan.WebAppApi.dto.authentication.UserCreationRequestDto;
+import com.karatesan.WebAppApi.dto.user.UserDetailDto;
 import com.karatesan.WebAppApi.services.UserService;
 import com.karatesan.WebAppApi.utility.AuthenticatedUserIdProvider;
 import jakarta.validation.Valid;

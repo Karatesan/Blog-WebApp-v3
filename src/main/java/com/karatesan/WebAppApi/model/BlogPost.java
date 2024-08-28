@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO ogarnac zdjecia, usuwanie itp
 @Data
 @ToString(exclude = {"comments", "author"})
 @NoArgsConstructor
@@ -27,12 +28,15 @@ public class BlogPost {
     private BlogUser author;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "blogPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "blogPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
     private int rating;
 
     public BlogPost(BlogUser author, String content, String title) {
         this.author = author;
         this.content = content;
         this.comments = new ArrayList<>();
+        this.images = new ArrayList<>();
         this.title = title;
         this.rating = 0;
     }
@@ -47,8 +51,12 @@ public class BlogPost {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void addComment(Comment comment){
+    public void addComment(Comment comment) {
         comments.add(comment);
+    }
+
+    public void addImage(Image image) {
+        images.add(image);
     }
 
 //    private String poster;

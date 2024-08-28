@@ -2,8 +2,8 @@ package com.karatesan.WebAppApi.services;
 
 import com.karatesan.WebAppApi.exception.UserNotFoundException;
 import com.karatesan.WebAppApi.ulilityClassess.Token;
-import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
-import com.karatesan.WebAppApi.dto.UserLoginRequestDto;
+import com.karatesan.WebAppApi.dto.authentication.TokenSuccessResponseDto;
+import com.karatesan.WebAppApi.dto.authentication.UserLoginRequestDto;
 import com.karatesan.WebAppApi.exception.InvalidCredentialsException;
 import com.karatesan.WebAppApi.exception.TokenVerificationException;
 import com.karatesan.WebAppApi.model.security.BlogUser;
@@ -30,7 +30,8 @@ public class AuthenticationService {
     private final CompromisedPasswordChecker compromisedPasswordChecker;
     private final TokenRevocationService tokenRevocationService;
 
-    //TODO prevent user from multiple logins
+    //TODO prevent user from multiple logins, bedzie trzeba zmodyfikowac token zeby przechowywal info o id sessji,
+    //TODO tak zeby dalo sie sprawdzic czy jak sie loguje to jest juz zalogowany na tym konkretnym urzadzeniu
     public TokenSuccessResponseDto login(@NonNull final UserLoginRequestDto userLoginRequestDto){
 
         final BlogUser user = userRepository.findByEmail(userLoginRequestDto.getEmail())

@@ -1,4 +1,4 @@
-package com.karatesan.WebAppApi.dto;
+package com.karatesan.WebAppApi.dto.user;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;

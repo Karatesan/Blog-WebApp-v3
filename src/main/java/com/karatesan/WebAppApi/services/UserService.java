@@ -1,14 +1,15 @@
 package com.karatesan.WebAppApi.services;
 
 
-import com.karatesan.WebAppApi.dto.ResetPasswordRequestDto;
-import com.karatesan.WebAppApi.dto.UserCreationRequestDto;
-import com.karatesan.WebAppApi.dto.UserDetailDto;
+import com.karatesan.WebAppApi.dto.authentication.ResetPasswordRequestDto;
+import com.karatesan.WebAppApi.dto.authentication.UserCreationRequestDto;
+import com.karatesan.WebAppApi.dto.user.UserDetailDto;
 import com.karatesan.WebAppApi.exception.*;
 import com.karatesan.WebAppApi.model.security.BlogUser;
 import com.karatesan.WebAppApi.model.security.UserStatus;
 import com.karatesan.WebAppApi.model.security.role.Role;
 import com.karatesan.WebAppApi.repositories.BlogUserRepository;
+import com.karatesan.WebAppApi.utility.AuthenticatedUserIdProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -35,6 +36,7 @@ public class UserService {
     private final CompromisedPasswordChecker compromisedPasswordChecker;
     private final RoleService roleService;
     private final AccountActivationService accountActivationService;
+    private final AuthenticatedUserIdProvider authenticatedUserIdProvider;
 
 
     public void create(@NonNull final UserCreationRequestDto userCreationRequest) {
@@ -102,8 +104,8 @@ public class UserService {
     }
 
     public UserDetailDto getUserDataById(@NonNull Long userId) {
-        final BlogUser user = findUserById(userId)
-                .orElseThrow(IllegalStateException::new);
+        final BlogUser user = findAuthenticatedUser();
+
 
         return UserDetailDto.builder()
                 .name(user.getName())
@@ -115,8 +117,13 @@ public class UserService {
                 .build();
     }
 
-    public Optional<BlogUser> findUserById(@NonNull Long id){
-        return userRepository.findById(id);
+//    public Optional<BlogUser> findUserById(@NonNull Long id){
+//        return userRepository.findById(id);
+//    }
+
+    public BlogUser findAuthenticatedUser(){
+        Long id = authenticatedUserIdProvider.getUserId();
+        return userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("User with id "+id+" not found."));
     }
 
     public Optional<BlogUser> findUserByEmail(@NonNull String email){

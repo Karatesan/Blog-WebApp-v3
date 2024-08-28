@@ -1,7 +1,7 @@
 package com.karatesan.WebAppApi.services;
 
 
-import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
+import com.karatesan.WebAppApi.dto.authentication.TokenSuccessResponseDto;
 import com.karatesan.WebAppApi.exception.TokenVerificationException;
 import com.karatesan.WebAppApi.exception.UserNotFoundException;
 import com.karatesan.WebAppApi.model.security.BlogUser;
@@ -10,7 +10,6 @@ import com.karatesan.WebAppApi.utility.CacheManager;
 import com.karatesan.WebAppApi.utility.JwtUtility;
 import lombok.RequiredArgsConstructor;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

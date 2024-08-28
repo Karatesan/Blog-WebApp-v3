@@ -1,24 +1,19 @@
 package com.karatesan.WebAppApi.datasource;
 
-import com.karatesan.WebAppApi.model.BlogPost;
-import com.karatesan.WebAppApi.model.Comment;
-import com.karatesan.WebAppApi.model.security.BlogUser;
-import com.karatesan.WebAppApi.model.security.UserStatus;
-import com.karatesan.WebAppApi.model.security.role.Privilege;
-import com.karatesan.WebAppApi.model.security.role.Role;
 import com.karatesan.WebAppApi.repositories.BlogUserRepository;
+import com.karatesan.WebAppApi.repositories.CommentRepository;
 import com.karatesan.WebAppApi.repositories.PrivilegeRepository;
 import com.karatesan.WebAppApi.repositories.RoleRepository;
+import com.karatesan.WebAppApi.services.interfaces.BlogPostService;
+import com.karatesan.WebAppApi.services.interfaces.CommentService;
+import com.karatesan.WebAppApi.services.RoleService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 //
 //
 ///*
@@ -34,6 +29,7 @@ import java.util.Optional;
 //In your SetupDataLoader class, you use @Transactional on methods that interact with the database to ensure that the operations (such as saving entities or querying data) are performed within a transactional context. This helps guarantee data consistency and integrity, especially when dealing with multiple database operations in a single method.*/
 
 @Component
+@RequiredArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent>{
 
     boolean alreadySetup = false;
@@ -41,45 +37,63 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final BlogUserRepository blogUserRepository;
     private final PrivilegeRepository privilegeRepository;
     private final RoleRepository roleRepository;
-
+    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public SetupDataLoader(BlogUserRepository blogUserRepository, PrivilegeRepository privilegeRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-        this.blogUserRepository = blogUserRepository;
-        this.privilegeRepository = privilegeRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final BlogPostService blogPostService;
+    private final CommentService commentService;
+    private final RoleService roleService;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if(alreadySetup) {
+//        jdbcTemplate.execute("INSERT INTO privilege (name) VALUES ('READ_PRIVILEGE'), ('WRITE_PRIVILEGE'), ('COMMENT_PRIVILEGE'), ('DELETE_PRIVILEGE'), ('ADMIN_PRIVILEGE')");
+//        jdbcTemplate.execute("INSERT INTO role (name) VALUES ('ROLE_USER'), ('ROLE_AUTHOR'), ('ROLE_ADMIN')");
+//        jdbcTemplate.execute("INSERT INTO roles_privileges (role_id, privilege_id)\n" +
+//                "VALUES\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_USER'),(SELECT id FROM privilege WHERE name = 'READ_PRIVILEGE')),\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_USER'),(SELECT id FROM privilege WHERE name = 'COMMENT_PRIVILEGE')),\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_AUTHOR'),(SELECT id FROM privilege WHERE name = 'READ_PRIVILEGE')),\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_AUTHOR'),(SELECT id FROM privilege WHERE name = 'WRITE_PRIVILEGE')),\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_AUTHOR'),(SELECT id FROM privilege WHERE name = 'COMMENT_PRIVILEGE')),\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_ADMIN'),(SELECT id FROM privilege WHERE name = 'READ_PRIVILEGE')),\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_ADMIN'),(SELECT id FROM privilege WHERE name = 'COMMENT_PRIVILEGE')),\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_ADMIN'),(SELECT id FROM privilege WHERE name = 'WRITE_PRIVILEGE')),\n" +
+//                "((SELECT id FROM role WHERE name = 'ROLE_ADMIN'),(SELECT id FROM privilege WHERE name = 'ADMIN_PRIVILEGE'));");
+//
+//        jdbcTemplate.execute("INSERT INTO role (name) VALUES ('ROLE_PREACTIVATED')");
+//        jdbcTemplate.execute("INSERT INTO roles_privileges (role_id, privilege_id)\n" +
+//                "VALUES\n" +
+//                "( (SELECT id FROM role WHERE name = 'ROLE_PREACTIVATED'),(SELECT id FROM privilege WHERE name = 'READ_PRIVILEGE'))");
 
-            Optional<BlogUser> byEmail = blogUserRepository.findByEmail("karatesan00@gmail.com");
-            System.out.println("===============================================\n=============================================");
-            System.out.println(byEmail.get());
-
-            return;
-        }
-        System.out.println("========================================\n=======================================\n====================");
-
-            BlogUser blogUser = new BlogUser("name", "lastName","karatesan00@gmail.com","mySecurePassword321", UserStatus.APPROVED);
-            BlogPost post = new BlogPost(blogUser, "Blog zawartosc", "Tytul");
-            Comment c1 = new Comment(post, blogUser,"Content",null, null);
-            Comment c2 = new Comment(post, blogUser,"Content",c1, null);
-            Comment c3 = new Comment(post, blogUser,"Content",c1, c2);
-            post.addComment(c1);
-            post.addComment(c2);
-            post.addComment(c3);
-            blogUser.addBlogPost(post);
-            blogUserRepository.save(blogUser);
-
-
-
-        alreadySetup= true;
+//            Optional<BlogUser> byEmail = blogUserRepository.findByEmail("karatesan00@gmail.com");
+//            if(byEmail.isPresent()) {
+//                BlogPost blogPostById = blogPostService.findBlogPostById(1L);
+//                System.out.println(blogPostById.getComments());
+//                Comment c = commentService.findCommentById(3L);
+//                Comment c1 = new Comment(blogPostById, byEmail.get(), "Content4",null, c);
+//                commentRepository.save(c1);
+//
+//            }else {
+//
+//                System.out.println("========================================\n=======================================\n====================");
+//                String password = passwordEncoder.encode("mySecurePassword321");
+////                Role author = roleService.getAdminRole();
+//
+//                BlogUser blogUser = new BlogUser("name", "lastName", "karatesan00@gmail.com", password, UserStatus.APPROVED);
+////               blogUser.setRoles(List.of(author));
+//                BlogPost post = new BlogPost(blogUser, "Blog zawartosc", "Tytul");
+//                Comment c1 = new Comment(post, blogUser, "Content", null, null);
+//                Comment c2 = new Comment(post, blogUser, "Content", c1, null);
+//                Comment c3 = new Comment(post, blogUser, "Content", c1, c2);
+//                post.addComment(c1);
+//                post.addComment(c2);
+//                post.addComment(c3);
+//                blogUser.addBlogPost(post);
+//                blogUserRepository.save(blogUser);
+//
+//            }
     }
 
 }

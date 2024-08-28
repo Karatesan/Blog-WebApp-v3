@@ -1,5 +1,4 @@
-package com.karatesan.WebAppApi.dto;
-
+package com.karatesan.WebAppApi.dto.authentication;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +7,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserLoginRequestDto {
+public class UserCreationRequestDto {
+
+    @NotBlank(message = "first-name must not be empty")
+    private String name;
+
+    @NotBlank(message = "last-name must not be empty")
+    private String lastName;
 
     @NotBlank(message = "email must not be empty")
     @Email(message = "email must be of valid format")
@@ -16,4 +21,7 @@ public class UserLoginRequestDto {
 
     @NotBlank(message = "password must not be empty")
     private String password;
+
+    @NotBlank(message = "confirm password must not be empty")
+    private String confirmPassword;
 }

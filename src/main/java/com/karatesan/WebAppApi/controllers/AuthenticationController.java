@@ -1,8 +1,8 @@
 package com.karatesan.WebAppApi.controllers;
 
 import com.karatesan.WebAppApi.config.PublicEndpoint;
-import com.karatesan.WebAppApi.dto.TokenSuccessResponseDto;
-import com.karatesan.WebAppApi.dto.UserLoginRequestDto;
+import com.karatesan.WebAppApi.dto.authentication.TokenSuccessResponseDto;
+import com.karatesan.WebAppApi.dto.authentication.UserLoginRequestDto;
 import com.karatesan.WebAppApi.services.AuthenticationService;
 import com.karatesan.WebAppApi.utility.TokenHeaderProvider;
 import jakarta.validation.Valid;
